@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://ysll2p5ubnlv"]
+
+[ext_resource type="Script" uid="uid://cykg085mbk7kf" path="res://Levels/Interactions/Scripts/door.gd" id="1_13mdg"]
+
+[node name="Door" type="Area2D"]
+script = ExtResource("1_13mdg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Spawn" type="Marker2D" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
