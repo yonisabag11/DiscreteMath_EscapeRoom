@@ -15,6 +15,10 @@ run/main_scene="uid://cyj2m526ptalv"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+NavigationManager="*res://Levels/Interactions/Scripts/navigation_manager.gd"
+
 [display]
 
 window/size/viewport_width=1920
