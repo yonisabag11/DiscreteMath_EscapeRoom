@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bgdnugsf4rm3v"
-path="res://.godot/imported/Tilled_Dirt_Wide.png-39fa5dccb43e6b0c44413e48d93ea197.ctex"
+uid="uid://wrwwbhbkkj7y"
+path="res://.godot/imported/TopDownHouse_FurnitureState2.png-ac4d24a271a1b70b5630b84687fe888f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Art/Tilesets/Tilled_Dirt_Wide.png"
-dest_files=["res://.godot/imported/Tilled_Dirt_Wide.png-39fa5dccb43e6b0c44413e48d93ea197.ctex"]
+source_file="res://Art/Tilesets/TopDownHouse_FurnitureState2.png"
+dest_files=["res://.godot/imported/TopDownHouse_FurnitureState2.png-ac4d24a271a1b70b5630b84687fe888f.ctex"]
 
 [params]
 
