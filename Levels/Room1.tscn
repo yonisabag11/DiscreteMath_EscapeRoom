@@ -2,13 +2,13 @@
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_0b5pd"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_8j3qf"]
-[ext_resource type="Texture2D" uid="uid://f6guiihe1j4e" path="res://Art/Tilesets/Grass.png" id="2_8j3qf"]
-[ext_resource type="Texture2D" uid="uid://doipp1mtd0ahe" path="res://Art/Tilesets/Tilled_Dirt.png" id="2_l4aji"]
-[ext_resource type="Texture2D" uid="uid://ogtpc7843qpo" path="res://Art/Tilesets/Hills.png" id="4_qgpdn"]
 [ext_resource type="PackedScene" uid="uid://ysll2p5ubnlv" path="res://Levels/Interactions/door.tscn" id="5_tsgrv"]
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_anxt4"]
+load_path = "res://.godot/imported/Grass.png-8b78bf1454c6d143615baa8a42b2e0f4.ctex"
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_55ds5"]
-texture = ExtResource("2_8j3qf")
+texture = SubResource("CompressedTexture2D_anxt4")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -84,8 +84,11 @@ texture = ExtResource("2_8j3qf")
 [sub_resource type="TileSet" id="TileSet_i1v2h"]
 sources/0 = SubResource("TileSetAtlasSource_55ds5")
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_6r88q"]
+load_path = "res://.godot/imported/Tilled_Dirt.png-49a641a9aa7526b242ee95208f2b11da.ctex"
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_anxt4"]
-texture = ExtResource("2_l4aji")
+texture = SubResource("CompressedTexture2D_6r88q")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -160,8 +163,11 @@ texture = ExtResource("2_l4aji")
 [sub_resource type="TileSet" id="TileSet_dmsew"]
 sources/1 = SubResource("TileSetAtlasSource_anxt4")
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_0b5pd"]
+load_path = "res://.godot/imported/Hills.png-adf23d67460d1d7012b3e6351f418ed6.ctex"
+
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8cwuu"]
-texture = ExtResource("4_qgpdn")
+texture = SubResource("CompressedTexture2D_0b5pd")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
