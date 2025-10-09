@@ -13,11 +13,7 @@ func _on_level_spawn(destination_tag: String) -> void:
 		return
 
 	var door = get_node(door_path) as Door
-	# Use last_player_direction if available, otherwise use door.spawn_direction
-	var facing_dir = NavigationManager.last_player_direction if NavigationManager.last_player_direction != "" else door.spawn_direction
-	NavigationManager.trigger_player_spawn(door.spawn.global_position, facing_dir)
-	# Reset last_player_direction after use
-	NavigationManager.last_player_direction = ""
+	NavigationManager.trigger_player_spawn(door.spawn.global_position, door.spawn_direction)
 
 	# Clear the tag so next scene doesn’t reuse it
 	NavigationManager.spawn_door_tag = ""

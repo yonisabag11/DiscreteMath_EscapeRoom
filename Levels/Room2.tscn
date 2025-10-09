@@ -1411,7 +1411,7 @@ sources/1 = SubResource("TileSetAtlasSource_2xr2k")
 sources/2 = SubResource("TileSetAtlasSource_o6by1")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8j3qf"]
-size = Vector2(6.188, 16.969)
+size = Vector2(30, 15)
 
 [node name="Room1" type="Node2D"]
 script = ExtResource("1_wjiyn")
@@ -1447,11 +1447,10 @@ destination_level_tag = "Lobby"
 destination_door_tag = "S"
 
 [node name="CollisionShape2D" parent="Doors/Door_S" index="0"]
-position = Vector2(0, -46)
-rotation = 1.5708
+position = Vector2(0, -42)
 shape = SubResource("RectangleShape2D_8j3qf")
 
 [node name="Spawn" parent="Doors/Door_S" index="1"]
-position = Vector2(0, -46)
+position = Vector2(0, -23)
 
 [editable path="Doors/Door_S"]
