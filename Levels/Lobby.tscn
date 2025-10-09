@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=4 uid="uid://cyj2m526ptalv"]
+[gd_scene load_steps=25 format=4 uid="uid://cyj2m526ptalv"]
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_ipit3"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_v81qt"]
@@ -1322,8 +1322,14 @@ physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_v025o")
 sources/2 = SubResource("TileSetAtlasSource_mh5bn")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_j83j6"]
-size = Vector2(6.1875, 16.9688)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2uni1"]
+size = Vector2(1, 31)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xrkt0"]
+size = Vector2(26, 1)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_v025o"]
+size = Vector2(2, 23)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1tyf7"]
 
@@ -1366,42 +1372,39 @@ position = Vector2(0, 6)
 collision_mask = 2
 destination_level_tag = "Room1"
 destination_door_tag = "E"
-spawn_direction = "left"
+spawn_direction = "right"
 
-[node name="CollisionShape2D" parent="Doors/Door_W" index="0"]
-position = Vector2(-125.094, 0)
-shape = SubResource("RectangleShape2D_j83j6")
+[node name="Spawn" parent="Doors/Door_W" index="0"]
+position = Vector2(-113, 0)
 
-[node name="Spawn" parent="Doors/Door_W" index="1"]
-position = Vector2(-125.094, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_W"]
+position = Vector2(-127.5, 0.5)
+shape = SubResource("RectangleShape2D_2uni1")
 
 [node name="Door_S" parent="Doors" instance=ExtResource("5_55ds5")]
 collision_mask = 2
 destination_level_tag = "Room2"
 destination_door_tag = "S"
-spawn_direction = "down"
 
-[node name="CollisionShape2D" parent="Doors/Door_S" index="0"]
-position = Vector2(0, 60)
-rotation = 1.5708
-shape = SubResource("RectangleShape2D_j83j6")
+[node name="Spawn" parent="Doors/Door_S" index="0"]
+position = Vector2(0, 53)
 
-[node name="Spawn" parent="Doors/Door_S" index="1"]
-position = Vector2(0, 60)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_S"]
+position = Vector2(0, 63.5)
+shape = SubResource("RectangleShape2D_xrkt0")
 
 [node name="Door_E" parent="Doors" instance=ExtResource("5_55ds5")]
-position = Vector2(6, 0)
 collision_mask = 2
 destination_level_tag = "Room3"
 destination_door_tag = "W"
-spawn_direction = "right"
+spawn_direction = "left"
 
-[node name="CollisionShape2D" parent="Doors/Door_E" index="0"]
-position = Vector2(119, 0)
-shape = SubResource("RectangleShape2D_j83j6")
+[node name="Spawn" parent="Doors/Door_E" index="0"]
+position = Vector2(116, 0)
 
-[node name="Spawn" parent="Doors/Door_E" index="1"]
-position = Vector2(119, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_E"]
+position = Vector2(128, -0.5)
+shape = SubResource("RectangleShape2D_v025o")
 
 [node name="InteractionArea" parent="." instance=ExtResource("8_1tyf7")]
 position = Vector2(-12, 19)

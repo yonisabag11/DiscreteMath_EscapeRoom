@@ -1,10 +1,8 @@
 extends Node
 
-
 signal on_trigger_player_spawn
+
 var spawn_door_tag: String = ""  # The door where the player should spawn
-# Store last facing direction
-var last_player_direction: String = "down"
 
 const scene_Lobby = preload("res://Levels/Lobby.tscn")
 const scene_Room1 = preload("res://Levels/Room1.tscn")
