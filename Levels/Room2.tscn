@@ -1410,8 +1410,8 @@ physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_2xr2k")
 sources/2 = SubResource("TileSetAtlasSource_o6by1")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8j3qf"]
-size = Vector2(30, 15)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wjiyn"]
+size = Vector2(39, 1)
 
 [node name="Room1" type="Node2D"]
 script = ExtResource("1_wjiyn")
@@ -1445,12 +1445,13 @@ tile_set = SubResource("TileSet_cx1nf")
 collision_mask = 2
 destination_level_tag = "Lobby"
 destination_door_tag = "S"
+spawn_direction = "down"
 
-[node name="CollisionShape2D" parent="Doors/Door_S" index="0"]
-position = Vector2(0, -42)
-shape = SubResource("RectangleShape2D_8j3qf")
+[node name="Spawn" parent="Doors/Door_S" index="0"]
+position = Vector2(0, -39)
 
-[node name="Spawn" parent="Doors/Door_S" index="1"]
-position = Vector2(0, -23)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_S"]
+position = Vector2(0.5, -48.5)
+shape = SubResource("RectangleShape2D_wjiyn")
 
 [editable path="Doors/Door_S"]
