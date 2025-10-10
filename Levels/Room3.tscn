@@ -1201,13 +1201,11 @@ texture = ExtResource("3_df8ri")
 4:8/0 = 0
 4:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 5:8/0 = 0
-5:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:8/0 = 0
 6:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 7:8/0 = 0
 7:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 8:8/0 = 0
-8:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 9:8/0 = 0
 9:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 10:8/0 = 0
@@ -1273,7 +1271,7 @@ spawn_direction = "right"
 position = Vector2(-114, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_W"]
-position = Vector2(-127.5, 0)
+position = Vector2(-132, 0)
 shape = SubResource("RectangleShape2D_7gs52")
 
 [editable path="Doors/Door_W"]

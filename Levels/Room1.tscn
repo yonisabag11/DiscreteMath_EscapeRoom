@@ -1202,13 +1202,9 @@ texture = ExtResource("5_utngc")
 4:8/0 = 0
 4:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.95689, -8, -4.13675)
 5:8/0 = 0
-5:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.95689, -8, -4.13675)
 6:8/0 = 0
-6:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.95689, -8, -4.13675)
 7:8/0 = 0
-7:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.95689, -8, -4.13675)
 8:8/0 = 0
-8:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.95689, -8, -4.13675)
 9:8/0 = 0
 9:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.95689, -8, -4.13675)
 10:8/0 = 0
@@ -1233,7 +1229,7 @@ sources/1 = SubResource("TileSetAtlasSource_2xr2k")
 sources/2 = SubResource("TileSetAtlasSource_o6by1")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgpdn"]
-size = Vector2(2, 30.5)
+size = Vector2(2, 23)
 
 [node name="Room1" type="Node2D"]
 script = ExtResource("1_8j3qf")
@@ -1273,7 +1269,7 @@ spawn_direction = "left"
 position = Vector2(115, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_E"]
-position = Vector2(128, 0.25)
+position = Vector2(132, 0.5)
 shape = SubResource("RectangleShape2D_qgpdn")
 
 [editable path="Doors/Door_E"]
