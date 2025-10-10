@@ -1373,7 +1373,7 @@ destination_door_tag = "E"
 spawn_direction = "right"
 
 [node name="Spawn" parent="Doors/Door_W" index="0"]
-position = Vector2(-113, 0)
+position = Vector2(-122, -1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_W"]
 position = Vector2(-132, 1)
@@ -1385,7 +1385,7 @@ destination_level_tag = "Room2"
 destination_door_tag = "S"
 
 [node name="Spawn" parent="Doors/Door_S" index="0"]
-position = Vector2(0, 53)
+position = Vector2(0, 54)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_S"]
 position = Vector2(0, 68)
@@ -1398,7 +1398,7 @@ destination_door_tag = "W"
 spawn_direction = "left"
 
 [node name="Spawn" parent="Doors/Door_E" index="0"]
-position = Vector2(116, 0)
+position = Vector2(122, -2)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_E"]
 position = Vector2(133, 1)
