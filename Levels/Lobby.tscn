@@ -1291,13 +1291,11 @@ texture = ExtResource("3_j83j6")
 4:8/0 = 0
 4:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.59717, -8, -3.77703)
 5:8/0 = 0
-5:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.59717, -8, -3.77703)
 6:8/0 = 0
 6:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.59717, -8, -3.77703)
 7:8/0 = 0
 7:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.59717, -8, -3.77703)
 8:8/0 = 0
-8:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.59717, -8, -3.77703)
 9:8/0 = 0
 9:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, -3.59717, -8, -3.77703)
 10:8/0 = 0
@@ -1378,7 +1376,7 @@ spawn_direction = "right"
 position = Vector2(-113, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_W"]
-position = Vector2(-127.5, 0.5)
+position = Vector2(-132, 1)
 shape = SubResource("RectangleShape2D_2uni1")
 
 [node name="Door_S" parent="Doors" instance=ExtResource("5_55ds5")]
@@ -1390,7 +1388,7 @@ destination_door_tag = "S"
 position = Vector2(0, 53)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_S"]
-position = Vector2(0, 63.5)
+position = Vector2(0, 68)
 shape = SubResource("RectangleShape2D_xrkt0")
 
 [node name="Door_E" parent="Doors" instance=ExtResource("5_55ds5")]
@@ -1403,7 +1401,7 @@ spawn_direction = "left"
 position = Vector2(116, 0)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_E"]
-position = Vector2(128, -0.5)
+position = Vector2(133, 1)
 shape = SubResource("RectangleShape2D_v025o")
 
 [node name="InteractionArea" parent="." instance=ExtResource("8_1tyf7")]
