@@ -9,7 +9,7 @@ var active_areas = []
 var can_interact = true
 
 func _ready():
-	var font = load("res://Font/PressStart2P-Regular.ttf")
+	var font = load("res://GUI/Font/PressStart2P-Regular.ttf")
 	label.add_theme_font_override("font", font)
 	label.add_theme_font_size_override("font_size", 4)
 
