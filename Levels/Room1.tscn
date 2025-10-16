@@ -1,8 +1,9 @@
-[gd_scene load_steps=18 format=4 uid="uid://bpdn4d3clu536"]
+[gd_scene load_steps=20 format=4 uid="uid://bpdn4d3clu536"]
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_0b5pd"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_8j3qf"]
 [ext_resource type="Texture2D" uid="uid://8s88btbp5quy" path="res://Art/Tilesets/TopDownHouse_DoorsAndWindows.png" id="4_qgpdn"]
+[ext_resource type="Texture2D" uid="uid://cermkryhj1xg7" path="res://Art/Tilesets/TopDownHouse_SmallItems.png" id="5_myol5"]
 [ext_resource type="PackedScene" uid="uid://ysll2p5ubnlv" path="res://Levels/Interactions/door.tscn" id="5_tsgrv"]
 [ext_resource type="Texture2D" uid="uid://difwjq7ivj8hx" path="res://Art/Tilesets/TopDownHouse_FloorsAndWalls.png" id="5_utngc"]
 [ext_resource type="Texture2D" uid="uid://wrwwbhbkkj7y" path="res://Art/Tilesets/TopDownHouse_FurnitureState2.png" id="6_myol5"]
@@ -358,6 +359,73 @@ texture = ExtResource("4_qgpdn")
 physics_layer_0/collision_layer = 1
 sources/1 = SubResource("TileSetAtlasSource_xciqp")
 sources/2 = SubResource("TileSetAtlasSource_f1flt")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cmvtn"]
+texture = ExtResource("5_myol5")
+0:0/0 = 0
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+4:0/0 = 0
+5:0/0 = 0
+6:0/0 = 0
+7:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+4:1/0 = 0
+5:1/0 = 0
+6:1/0 = 0
+7:1/0 = 0
+0:2/0 = 0
+1:2/0 = 0
+2:2/0 = 0
+3:2/0 = 0
+4:2/0 = 0
+5:2/0 = 0
+6:2/0 = 0
+7:2/0 = 0
+0:3/0 = 0
+1:3/0 = 0
+2:3/0 = 0
+3:3/0 = 0
+4:3/0 = 0
+5:3/0 = 0
+6:3/0 = 0
+7:3/0 = 0
+0:4/0 = 0
+1:4/0 = 0
+2:4/0 = 0
+3:4/0 = 0
+4:4/0 = 0
+5:4/0 = 0
+6:4/0 = 0
+7:4/0 = 0
+0:5/0 = 0
+1:5/0 = 0
+2:5/0 = 0
+3:5/0 = 0
+4:5/0 = 0
+5:5/0 = 0
+6:5/0 = 0
+7:5/0 = 0
+0:6/0 = 0
+1:6/0 = 0
+2:6/0 = 0
+3:6/0 = 0
+4:6/0 = 0
+5:6/0 = 0
+6:6/0 = 0
+7:6/0 = 0
+0:7/0 = 0
+1:7/0 = 0
+2:7/0 = 0
+3:7/0 = 0
+4:7/0 = 0
+5:7/0 = 0
+6:7/0 = 0
+7:7/0 = 0
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_um4uy"]
 texture = ExtResource("6_myol5")
@@ -834,6 +902,7 @@ texture = ExtResource("7_cmvtn")
 [sub_resource type="TileSet" id="TileSet_gnwyn"]
 sources/3 = SubResource("TileSetAtlasSource_um4uy")
 sources/4 = SubResource("TileSetAtlasSource_qwk3u")
+sources/0 = SubResource("TileSetAtlasSource_cmvtn")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2xr2k"]
 texture = ExtResource("4_qgpdn")
@@ -1249,7 +1318,7 @@ tile_set = SubResource("TileSet_dlfv1")
 
 [node name="TopGround" type="TileMapLayer" parent="."]
 show_behind_parent = true
-tile_map_data = PackedByteArray("AADy////AAABAAEAAADy/wAAAAABAAEAAADy//7/AAAHAAUAAADy/wEAAAAGAAYAAADz////AAAJAAUAAADz/wAAAAAJAAUAAADz//7/AAACAAAAAADz/wEAAAACAAIAAAAHAP//BAAHAAIAAAAHAAAABAAHAAMAAAA=")
+tile_map_data = PackedByteArray("AAAHAP//BAAHAAIAAAAHAAAABAAHAAMAAAD4//v/AwAGAAwAAAD4//z/AwAGAA0AAAD4//3/AwAGAA4AAAD5//v/AwAHAAwAAAD5//z/AwAHAA0AAAD5//3/AwAHAA4AAAD6//v/AwAIAAwAAAD6//z/AwAIAA0AAAD6//3/AwAIAA4AAAD7//v/AwAJAAwAAAD7//z/AwAJAA0AAAD7//3/AwAJAA4AAAD8//v/AwAKAAwAAAD8//z/AwAKAA0AAAD8//3/AwAKAA4AAAD9//v/AwALAAwAAAD9//z/AwALAA0AAAD9//3/AwALAA4AAAD+//v/AwAMAAwAAAD+//z/AwAMAA0AAAD+//3/AwAMAA4AAAD9//7/AwALAA8AAAD+//7/AwAMAA8AAAD///r/BAACAAwAAAD///v/BAACAA0AAAD///z/BAACAA4AAAD///3/BAACAA8AAAAAAPr/BAADAAwAAAAAAPv/BAADAA0AAAAAAPz/BAADAA4AAAAAAP3/BAADAA8AAAA=")
 tile_set = SubResource("TileSet_gnwyn")
 
 [node name="Walls" type="TileMapLayer" parent="."]
