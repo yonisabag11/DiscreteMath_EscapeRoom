@@ -1,8 +1,8 @@
 [gd_scene load_steps=4 format=3 uid="uid://bdwudm1jdi1ir"]
 
 [ext_resource type="Texture2D" uid="uid://du5fbuirwvgww" path="res://GUI/player_HUD/gui-health.png" id="1_umdnw"]
-[ext_resource type="Script" path="res://GUI/player_HUD/player_hud.gd" id="1_uv35l"]
-[ext_resource type="PackedScene" path="res://GUI/player_HUD/heart_gui.tscn" id="2_uv35l"]
+[ext_resource type="Script" uid="uid://dm41xjcrhtg01" path="res://GUI/player_HUD/player_hud.gd" id="1_uv35l"]
+[ext_resource type="PackedScene" uid="uid://bxek4s2v3fpct" path="res://GUI/player_HUD/heart_gui.tscn" id="2_uv35l"]
 
 [node name="PlayerHud" type="CanvasLayer"]
 script = ExtResource("1_uv35l")

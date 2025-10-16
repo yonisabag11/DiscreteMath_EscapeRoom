@@ -1,7 +1,8 @@
-[gd_scene load_steps=28 format=3 uid="uid://cc7iroic6v6h2"]
+[gd_scene load_steps=29 format=3 uid="uid://cc7iroic6v6h2"]
 
 [ext_resource type="Texture2D" uid="uid://ly7pgpi7is5b" path="res://Art/Characters/Basic Charakter Spritesheet.png" id="1_k8dsg"]
 [ext_resource type="Script" uid="uid://ba3dr8bxfrfx2" path="res://Characters/player_cat.gd" id="1_u0lhy"]
+[ext_resource type="PackedScene" uid="uid://bdwudm1jdi1ir" path="res://GUI/player_HUD/player_hud.tscn" id="3_hhb2n"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k8dsg"]
 size = Vector2(10, 6)
@@ -267,3 +268,5 @@ tree_root = SubResource("AnimationNodeStateMachine_adw66")
 anim_player = NodePath("../AnimationPlayer")
 parameters/Idle/blend_position = Vector2(-0.204147, -0.0739911)
 parameters/Walk/blend_position = Vector2(-0.413078, 0.300897)
+
+[node name="PlayerHud" parent="." instance=ExtResource("3_hhb2n")]

@@ -3,9 +3,12 @@ class_name player_cat
 
 @export var move_speed: float = 100
 @export var starting_direction: Vector2 = Vector2(0, 1)
+@export var max_hp: int = 6
+var current_hp: int = max_hp
 
 @onready var animation_tree = $AnimationTree
 @onready var state_machine = animation_tree.get("parameters/playback")
+@onready var gui = get_tree().root.get_node("/GUI")
 
 func _ready() -> void:
 	update_animation_parameters(starting_direction)
@@ -49,3 +52,7 @@ func _vector_from_direction(dir: String) -> Vector2:
 		"left": return Vector2(-1, 0)
 		"right": return Vector2(1, 0)
 	return Vector2(0, 1)
+
+func take_damage(amount: int):
+	current_hp = max(0, current_hp - amount)
+	gui.update_hp(current_hp, max_hp)
