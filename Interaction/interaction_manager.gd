@@ -24,9 +24,9 @@ func unregister_area(area: InteractionArea):
 func _process(delta):
 	if active_areas.size() > 0 and can_interact:
 		active_areas.sort_custom(_sort_by_distance_to_player)
-		label.text = base_text + active_areas[0].action_name
-
 		var area = active_areas[0]
+		label.text = base_text + area.action_name
+
 		var collision_shape = area.get_node("CollisionShape2D")
 		if collision_shape and collision_shape.shape:
 			var shape = collision_shape.shape
@@ -37,13 +37,14 @@ func _process(delta):
 				shape_height = shape.height
 			elif shape is CircleShape2D:
 				shape_height = shape.radius * 2
-			# Add other shape types as needed
 
+			# Apply custom offset
 			label.global_position = collision_shape.global_position
-			label.global_position.y += shape_height / 2 - 10
-			label.global_position.x -= label.size.x / 2
+			label.global_position.x += area.label_offset_x - (label.size.x / 2)
+			label.global_position.y += area.label_offset_y + (shape_height / 2) - 10
 		else:
-			label.global_position = area.global_position
+			label.global_position = area.global_position + Vector2(area.label_offset_x, area.label_offset_y)
+
 		label.show()
 	else:
 		label.hide()
