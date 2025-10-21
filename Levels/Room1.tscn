@@ -2011,7 +2011,7 @@ shape = SubResource("RectangleShape2D_qgpdn")
 position = Vector2(-12, 19)
 action_name = "read"
 label_offset_x = -10.0
-label_offset_y = -35.0
+label_offset_y = -33.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
 position = Vector2(17, -55)
