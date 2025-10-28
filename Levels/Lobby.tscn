@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=4 uid="uid://cyj2m526ptalv"]
+[gd_scene load_steps=24 format=4 uid="uid://cyj2m526ptalv"]
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_ipit3"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_v81qt"]
@@ -7,8 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://ysll2p5ubnlv" path="res://Levels/Interactions/door.tscn" id="5_55ds5"]
 [ext_resource type="Texture2D" uid="uid://wrwwbhbkkj7y" path="res://Art/Tilesets/TopDownHouse_FurnitureState2.png" id="5_v81qt"]
 [ext_resource type="Texture2D" uid="uid://qy1pltdp3opw" path="res://Art/Tilesets/TopDownHouse_FurnitureState1.png" id="6_r50g8"]
-[ext_resource type="PackedScene" uid="uid://c0a8a4ml255ci" path="res://Interaction/Interaction Area/interaction_area.tscn" id="8_1tyf7"]
 [ext_resource type="Texture2D" uid="uid://cermkryhj1xg7" path="res://Art/Tilesets/TopDownHouse_SmallItems.png" id="9_2uni1"]
+[ext_resource type="PackedScene" uid="uid://cb65aat2wp7i3" path="res://Levels/Interactions/interactable_object.tscn" id="10_xrkt0"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cax11"]
 texture = ExtResource("9_2uni1")
@@ -1329,8 +1329,6 @@ size = Vector2(26, 1)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v025o"]
 size = Vector2(2, 23)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_1tyf7"]
-
 [node name="Lobby" type="Node2D"]
 script = ExtResource("1_v81qt")
 
@@ -1404,13 +1402,8 @@ position = Vector2(122, -2)
 position = Vector2(133, 1)
 shape = SubResource("RectangleShape2D_v025o")
 
-[node name="InteractionArea" parent="." instance=ExtResource("8_1tyf7")]
-position = Vector2(-12, 19)
-action_name = "talk"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(-108, 36)
-shape = SubResource("CircleShape2D_1tyf7")
+[node name="InteractableObject" parent="." instance=ExtResource("10_xrkt0")]
+position = Vector2(-120, 55)
 
 [editable path="Doors/Door_W"]
 [editable path="Doors/Door_S"]

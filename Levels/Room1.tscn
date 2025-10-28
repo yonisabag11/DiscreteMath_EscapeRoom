@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://bpdn4d3clu536"]
+[gd_scene load_steps=27 format=4 uid="uid://bpdn4d3clu536"]
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_0b5pd"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_8j3qf"]
@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://difwjq7ivj8hx" path="res://Art/Tilesets/TopDownHouse_FloorsAndWalls.png" id="5_utngc"]
 [ext_resource type="Texture2D" uid="uid://wrwwbhbkkj7y" path="res://Art/Tilesets/TopDownHouse_FurnitureState2.png" id="6_myol5"]
 [ext_resource type="Texture2D" uid="uid://qy1pltdp3opw" path="res://Art/Tilesets/TopDownHouse_FurnitureState1.png" id="7_cmvtn"]
-[ext_resource type="PackedScene" uid="uid://c0a8a4ml255ci" path="res://Interaction/Interaction Area/interaction_area.tscn" id="9_utngc"]
+[ext_resource type="PackedScene" uid="uid://cb65aat2wp7i3" path="res://Levels/Interactions/interactable_object.tscn" id="10_myol5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_myol5"]
 texture = ExtResource("7_cmvtn")
@@ -1947,9 +1947,6 @@ sources/0 = SubResource("TileSetAtlasSource_utngc")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgpdn"]
 size = Vector2(2, 23)
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_myol5"]
-radius = 19.6469
-
 [node name="Room1" type="Node2D"]
 script = ExtResource("1_8j3qf")
 
@@ -2007,23 +2004,14 @@ position = Vector2(122, -2)
 position = Vector2(132, 0.5)
 shape = SubResource("RectangleShape2D_qgpdn")
 
-[node name="InteractionArea" parent="." instance=ExtResource("9_utngc")]
-position = Vector2(-12, 19)
-action_name = "read"
-label_offset_x = -10.0
-label_offset_y = -33.0
+[node name="InteractableObject" parent="." instance=ExtResource("10_myol5")]
+position = Vector2(5, -40)
+scale = Vector2(2, 2)
+prompt_offset = Vector2(-10, -33)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea"]
-position = Vector2(17, -55)
-shape = SubResource("CircleShape2D_myol5")
-
-[node name="InteractionArea2" parent="." instance=ExtResource("9_utngc")]
-position = Vector2(-12, 19)
-action_name = "view"
-label_offset_y = -40.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea2"]
-position = Vector2(-76, -2)
-shape = SubResource("CircleShape2D_myol5")
+[node name="InteractableObject2" parent="." instance=ExtResource("10_myol5")]
+position = Vector2(-88, 17)
+scale = Vector2(2, 2)
+prompt_offset = Vector2(0, -30)
 
 [editable path="Doors/Door_E"]
