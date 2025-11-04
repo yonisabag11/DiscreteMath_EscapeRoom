@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://m81rk7p6xk7c"]
+[gd_scene load_steps=20 format=4 uid="uid://m81rk7p6xk7c"]
 
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_7gs52"]
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="2_ekarj"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://wrwwbhbkkj7y" path="res://Art/Tilesets/TopDownHouse_FurnitureState2.png" id="5_kb3eq"]
 [ext_resource type="Texture2D" uid="uid://qy1pltdp3opw" path="res://Art/Tilesets/TopDownHouse_FurnitureState1.png" id="6_gtiwg"]
 [ext_resource type="PackedScene" uid="uid://ysll2p5ubnlv" path="res://Levels/Interactions/door.tscn" id="7_e0dq5"]
+[ext_resource type="PackedScene" uid="uid://cb65aat2wp7i3" path="res://Levels/Interactions/interactable_object.tscn" id="8_ekarj"]
+[ext_resource type="PackedScene" uid="uid://bm8n4x7t2vqw5" path="res://GUI/MiniGames/set_theory_puzzle_game.tscn" id="9_df8ri"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xciqp"]
 texture = ExtResource("3_df8ri")
@@ -1293,5 +1295,13 @@ position = Vector2(-121, -2)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Doors/Door_W"]
 position = Vector2(-132, 0)
 shape = SubResource("RectangleShape2D_7gs52")
+
+[node name="InteractableObject" parent="." instance=ExtResource("8_ekarj")]
+position = Vector2(-80, 51)
+scale = Vector2(2, 2)
+interaction_type = 1
+mini_game_scene = ExtResource("9_df8ri")
+one_time_only = true
+interaction_label = "play"
 
 [editable path="Doors/Door_W"]
