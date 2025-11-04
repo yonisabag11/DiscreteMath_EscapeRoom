@@ -1746,7 +1746,6 @@ sources/2 = SubResource("TileSetAtlasSource_o6by1")
 size = Vector2(30, 1)
 
 [node name="Room1" type="Node2D"]
-position = Vector2(1, -2)
 script = ExtResource("1_wjiyn")
 
 [node name="PlayerCat" parent="." instance=ExtResource("2_ox8cn")]

@@ -43,6 +43,12 @@ func _on_interact():
 	if one_time_only and has_been_used:
 		return
 	
+	# Check if mini-game is already completed (for mini-game types)
+	if (interaction_type == InteractionType.MINI_GAME_ONLY or interaction_type == InteractionType.TEXT_THEN_MINI_GAME):
+		if mini_game_scene and MiniGameManager.is_mini_game_completed(mini_game_scene):
+			# Already completed this mini-game in this session
+			return
+	
 	match interaction_type:
 		InteractionType.TEXT_ONLY:
 			await _show_text_dialog()
@@ -80,45 +86,42 @@ func _show_mini_game() -> Dictionary:
 	var game = MiniGameManager.show_mini_game(mini_game_scene)
 	
 	# Wait for completion or closure
-	var result = await race([
-		MiniGameManager.mini_game_completed,
-		MiniGameManager.mini_game_closed
-	])
+	var completed_signal_fired = false
+	var closed_signal_fired = false
+	var result_success = false
 	
-	if result[0] == 0:  # game_completed signal
-		var success = result[1]  # success parameter
+	var on_completed = func(success: bool):
+		if not closed_signal_fired:
+			completed_signal_fired = true
+			result_success = success
+	
+	var on_closed = func():
+		if not completed_signal_fired:
+			closed_signal_fired = true
+	
+	MiniGameManager.mini_game_completed.connect(on_completed, CONNECT_ONE_SHOT)
+	MiniGameManager.mini_game_closed.connect(on_closed, CONNECT_ONE_SHOT)
+	
+	# Wait for either signal
+	while not completed_signal_fired and not closed_signal_fired:
+		if not is_instance_valid(self) or not is_inside_tree():
+			# Node is being freed, return early
+			return {"completed": false, "success": false}
+		await get_tree().process_frame
+	
+	if completed_signal_fired:
 		mini_game_completed = true
 		
-		if success:
+		if result_success:
 			puzzle_solved.emit()
 			_on_puzzle_solved()
 		else:
 			puzzle_failed.emit()
 			_on_puzzle_failed()
 		
-		return {"completed": true, "success": success}
-	else:  # game_closed signal (ESC pressed, closed early)
+		return {"completed": true, "success": result_success}
+	else:  # closed_signal_fired
 		return {"completed": false, "success": false}
-
-# Helper function to race multiple signals
-func race(signals: Array) -> Array:
-	var result = []
-	var settled = false
-	
-	for i in range(signals.size()):
-		var sig = signals[i]
-		var callable = func(args = null):
-			if not settled:
-				settled = true
-				result = [i, args]
-		
-		if sig is Signal:
-			sig.connect(callable, CONNECT_ONE_SHOT)
-	
-	while not settled:
-		await get_tree().process_frame
-	
-	return result
 
 # Mark the object as used
 func _mark_as_used():

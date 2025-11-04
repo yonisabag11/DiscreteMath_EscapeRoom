@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Capstone_Project"
-run/main_scene="uid://cyj2m526ptalv"
+run/main_scene="res://GUI/MainMenu.tscn"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -27,6 +27,7 @@ MiniGameManager="*res://GUI/MiniGames/mini_game_manager.gd"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
 window/stretch/scale=4.0
 
 [input]
