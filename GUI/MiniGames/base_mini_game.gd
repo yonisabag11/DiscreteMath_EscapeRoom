@@ -22,18 +22,21 @@ func start_game():
 
 ## Call this when the player solves the puzzle
 func complete_game(success: bool = true):
+	if not is_active:
+		return
 	is_active = false
 	set_process_input(false)
 	game_completed.emit(success)
-	await get_tree().create_timer(0.5).timeout
-	hide()
+	# Don't hide immediately, let the manager handle cleanup
 
 ## Call this to close the game without completing it
 func close_game():
+	if not is_active:
+		return
 	is_active = false
 	set_process_input(false)
 	game_closed.emit()
-	hide()
+	# Don't hide immediately, let the manager handle cleanup
 
 ## Override this to handle input during your mini-game
 func _input(event):
