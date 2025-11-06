@@ -2027,3 +2027,4 @@ interaction_label = "view note"
 prompt_offset = Vector2(0, -30)
 
 [editable path="Doors/Door_E"]
+[editable path="TableNote"]

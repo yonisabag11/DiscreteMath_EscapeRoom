@@ -1275,7 +1275,7 @@ tile_set = SubResource("TileSet_dlfv1")
 
 [node name="TopGround" type="TileMapLayer" parent="."]
 show_behind_parent = true
-tile_map_data = PackedByteArray("AADy////AAABAAEAAADy/wAAAAABAAEAAADy//7/AAAHAAUAAADy/wEAAAAGAAYAAADz////AAAJAAUAAADz/wAAAAAJAAUAAADz//7/AAACAAAAAADz/wEAAAACAAIAAAD4////BAAIAAMAAFD4/wAABAAIAAMAAGD7//z/AwAFABAAAAD7//3/AwAFABEAAAD8//z/AwAGABAAAAD8//3/AwAGABEAAAD9//z/AwAHABAAAAD9//3/AwAHABEAAAD4//z/AwAJABAAAAD4//3/AwAJABEAAAD5//3/AwAKABEAAAAAAPv/BAAHAAkAAAABAPv/BAAIAAkAAAAAAPz/BAABABAAAAAAAP3/BAABABEAAAABAPz/BAACABAAAAABAP3/BAACABEAAAAAAPr/BAAHAAcAAAABAPr/BAAIAAcAAAD6/wIAAwADABAAAAD6/wMAAwADABEAAAD7/wIABAAEABAAAAD7/wMAAwAEABEAAAA=")
+tile_map_data = PackedByteArray("AAD4////BAAIAAMAAFD4/wAABAAIAAMAAGD7//z/AwAFABAAAAD7//3/AwAFABEAAAD8//z/AwAGABAAAAD8//3/AwAGABEAAAD9//z/AwAHABAAAAD9//3/AwAHABEAAAD4//z/AwAJABAAAAD4//3/AwAJABEAAAD5//3/AwAKABEAAAAAAPv/BAAHAAkAAAABAPv/BAAIAAkAAAAAAPz/BAABABAAAAAAAP3/BAABABEAAAABAPz/BAACABAAAAABAP3/BAACABEAAAAAAPr/BAAHAAcAAAABAPr/BAAIAAcAAAD6/wIAAwADABAAAAD6/wMAAwADABEAAAD7/wIABAAEABAAAAD7/wMAAwAEABEAAAAAAP7/AwAIAAMAAAABAP7/AwAJAAMAAAA=")
 tile_set = SubResource("TileSet_gnwyn")
 
 [node name="Walls" type="TileMapLayer" parent="."]
@@ -1305,4 +1305,15 @@ interaction_type = 1
 mini_game_scene = ExtResource("9_df8ri")
 interaction_label = "play"
 
+[node name="TableNote" parent="." instance=ExtResource("8_ekarj")]
+position = Vector2(-88, 17)
+scale = Vector2(2, 2)
+dialog_text = "A note under the rug displays the following:"
+interaction_label = "lift the rug"
+
+[node name="CollisionShape2D" parent="TableNote/InteractionArea" index="0"]
+position = Vector2(52.5, -21)
+
 [editable path="Doors/Door_W"]
+[editable path="InteractableObject"]
+[editable path="TableNote"]
