@@ -4,11 +4,11 @@ extends BaseMiniGame
 ## Players must find the intersection (A ∩ B) by clicking cells in a grid
 ## Game has 3 rounds, each with one intersection element to find
 
-# Grid configuration - using coordinate system (1-5 for columns, A-E for rows)
+# Grid configuration - using coordinate system (1-5 for columns, a-e for rows)
 const GRID_COLS: int = 5
 const GRID_ROWS: int = 5
 const CELL_SIZE: int = 28
-const ROW_LABELS: Array[String] = ["A", "B", "C", "D", "E"]
+const ROW_LABELS: Array[String] = ["a", "b", "c", "d", "e"]
 const COL_LABELS: Array[String] = ["1", "2", "3", "4", "5"]
 
 # Game settings
@@ -155,7 +155,7 @@ func _generate_random_sets_single_intersection():
 	set_b_elements.shuffle()
 	
 	# Set the grid coordinate based on the letter and number
-	var letter_row = ROW_LABELS.find(intersection_letter.to_upper())
+	var letter_row = ROW_LABELS.find(intersection_letter)
 	var number_col = COL_LABELS.find(intersection_number)
 	
 	current_intersection_coord = Vector2i(number_col, letter_row)
