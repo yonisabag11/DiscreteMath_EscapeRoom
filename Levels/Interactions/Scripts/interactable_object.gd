@@ -21,6 +21,7 @@ enum InteractionType { TEXT_ONLY, MINI_GAME_ONLY, TEXT_THEN_MINI_GAME }
 @export var dialog_position: Vector2 = Vector2(0, 0)  # Custom position offset from default
 
 var has_been_used: bool = false
+# Tracks if the mini-game finished (either success or failure). Closing doesn't set this.
 var mini_game_completed: bool = false
 
 @onready var interaction_area = $InteractionArea
@@ -43,10 +44,13 @@ func _on_interact():
 	if one_time_only and has_been_used:
 		return
 	
-	# Check if mini-game is already completed (for mini-game types)
+	# Block re-entry ONLY if the mini-game was actually finished (success or failure).
+	# If the player closed the game without finishing, allow trying again.
 	if (interaction_type == InteractionType.MINI_GAME_ONLY or interaction_type == InteractionType.TEXT_THEN_MINI_GAME):
-		if mini_game_scene and MiniGameManager.is_mini_game_completed(mini_game_scene):
-			# Already completed this mini-game in this session
+		if mini_game_completed:
+			# Already finished this mini-game, show completion message as a dialog
+			DialogBox.show_dialog("This puzzle has already been completed!")
+			await DialogBox.dialog_finished
 			return
 	
 	match interaction_type:
@@ -85,6 +89,14 @@ func _show_mini_game() -> Dictionary:
 	# Show the mini-game
 	var game = MiniGameManager.show_mini_game(mini_game_scene)
 	
+	# If game is null, it means the MiniGameManager detected it's already completed
+	# This is a fallback - normally we should have caught this earlier
+	if game == null:
+		mini_game_completed = true
+		DialogBox.show_dialog("This puzzle has already been completed!")
+		await DialogBox.dialog_finished
+		return {"completed": true, "success": true}
+	
 	# Wait for completion or closure
 	var completed_signal_fired = false
 	var closed_signal_fired = false
@@ -110,17 +122,24 @@ func _show_mini_game() -> Dictionary:
 		await get_tree().process_frame
 	
 	if completed_signal_fired:
-		mini_game_completed = true
-		
+		# Only block future re-entry on SUCCESS; failure allows trying again.
 		if result_success:
+			mini_game_completed = true
 			puzzle_solved.emit()
 			_on_puzzle_solved()
 		else:
 			puzzle_failed.emit()
 			_on_puzzle_failed()
-		
+		# After closing the mini-game, ensure the prompt can show again by refreshing the area registration
+		if interaction_area and is_instance_valid(interaction_area):
+			InteractionManager.unregister_area(interaction_area)
+			InteractionManager.register_area(interaction_area)
 		return {"completed": true, "success": result_success}
 	else:  # closed_signal_fired
+		# Refresh area registration so the [E] prompt returns immediately after a close
+		if interaction_area and is_instance_valid(interaction_area):
+			InteractionManager.unregister_area(interaction_area)
+			InteractionManager.register_area(interaction_area)
 		return {"completed": false, "success": false}
 
 # Mark the object as used
