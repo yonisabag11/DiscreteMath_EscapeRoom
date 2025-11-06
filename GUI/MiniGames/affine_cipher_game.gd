@@ -92,7 +92,9 @@ func start_game():
 	
 	_update_attempts_display()
 	
-	# Focus the input field
+	# Focus the input field after a frame to avoid capturing the interact key press
+	await get_tree().process_frame
+	answer_input.text = ""  # Clear any captured input
 	answer_input.grab_focus()
 
 ## Select a random puzzle from the database and encrypt it
