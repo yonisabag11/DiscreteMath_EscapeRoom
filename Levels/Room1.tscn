@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=4 uid="uid://bpdn4d3clu536"]
+[gd_scene load_steps=29 format=4 uid="uid://bpdn4d3clu536"]
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_0b5pd"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_8j3qf"]
@@ -1948,6 +1948,9 @@ sources/0 = SubResource("TileSetAtlasSource_utngc")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgpdn"]
 size = Vector2(2, 23)
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_myol5"]
+radius = 14.0357
+
 [node name="Room1" type="Node2D"]
 script = ExtResource("1_8j3qf")
 
@@ -2016,15 +2019,29 @@ prompt_offset = Vector2(-10, -33)
 [node name="TableNote" parent="." instance=ExtResource("10_myol5")]
 position = Vector2(-88, 17)
 scale = Vector2(2, 2)
-dialog_text = "Note: The fridge recipe is encrypted!
+dialog_text = "The note on the fridge is encrypted using an affine cypher!
 
-Affine Cipher Formula:
+Decryption Formula:
+
 D(x) = a^(-1) * (x - b) mod 26
-
-The puzzle shows the a and b values.
-Good luck!"
+"
 interaction_label = "view note"
 prompt_offset = Vector2(0, -30)
 
+[node name="Cabinet" parent="." instance=ExtResource("10_myol5")]
+position = Vector2(-56, -35)
+dialog_text = "A hidden message is scrawled into the inside of the cabinet door!
+
+It reads:
+
+\"Hint: To find the modular inverse of a, you may make use of the Extended Euclidean Algorithm\""
+interaction_label = "inspect cabinet"
+prompt_offset = Vector2(-20, -20)
+
+[node name="CollisionShape2D" parent="Cabinet/InteractionArea" index="0"]
+position = Vector2(1, 1)
+shape = SubResource("CircleShape2D_myol5")
+
 [editable path="Doors/Door_E"]
 [editable path="TableNote"]
+[editable path="Cabinet"]
