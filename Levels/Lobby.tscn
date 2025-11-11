@@ -1583,21 +1583,20 @@ position = Vector2(122, -2)
 position = Vector2(133, 1)
 shape = SubResource("RectangleShape2D_v025o")
 
-[node name="pot" parent="." instance=ExtResource("10_xrkt0")]
+[node name="PotHint" parent="." instance=ExtResource("10_xrkt0")]
 position = Vector2(-120, 55)
 
 [node name="FinalDoor" parent="." instance=ExtResource("10_xrkt0")]
-position = Vector2(3, -21)
+position = Vector2(0, -53)
 dialog_text = "This door is locked..."
 interaction_label = "open door"
 prompt_offset = Vector2(0, -20)
 
 [node name="CollisionShape2D" parent="FinalDoor/InteractionArea" index="0"]
-position = Vector2(-2, -28)
 shape = SubResource("CircleShape2D_j3gjx")
 
 [editable path="Doors/Door_W"]
 [editable path="Doors/Door_S"]
 [editable path="Doors/Door_E"]
-[editable path="pot"]
+[editable path="PotHint"]
 [editable path="FinalDoor"]

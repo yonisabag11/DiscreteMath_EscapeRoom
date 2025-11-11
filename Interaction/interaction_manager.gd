@@ -75,6 +75,11 @@ func _input(event):
 			get_viewport().set_input_as_handled()  # Consume the input
 			can_interact = false  # Disable interaction temporarily
 			label.hide()  # Hide the label
+			
+			# Freeze player movement immediately when interaction starts
+			if player and player.has_method("freeze"):
+				player.freeze()
+			
 			await active_areas[0].interact.call()  # Execute the interaction
 			can_interact = true  # Re-enable interaction
 			print("Interaction completed, can_interact set to true")

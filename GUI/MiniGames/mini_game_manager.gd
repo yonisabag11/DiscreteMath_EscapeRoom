@@ -32,6 +32,11 @@ func show_mini_game(game_scene: PackedScene) -> BaseMiniGame:
 	if current_mini_game:
 		close_mini_game()
 	
+	# Freeze player movement
+	var player = get_tree().get_first_node_in_group("player_cat")
+	if player and player.has_method("freeze"):
+		player.freeze()
+	
 	# Instantiate the new mini-game
 	current_mini_game = game_scene.instantiate()
 	mini_game_container.add_child(current_mini_game)
@@ -65,6 +70,11 @@ func _on_mini_game_completed(success: bool, scene_path: String = ""):
 	await get_tree().create_timer(0.1).timeout
 	if has_node("/root/InteractionManager"):
 		get_node("/root/InteractionManager").enable_interaction()
+	
+	# Unfreeze player movement
+	var player = get_tree().get_first_node_in_group("player_cat")
+	if player and player.has_method("unfreeze"):
+		player.unfreeze()
 
 func _on_mini_game_closed():
 	print("MiniGameManager: Mini-game closed signal received")
@@ -74,6 +84,11 @@ func _on_mini_game_closed():
 	await get_tree().create_timer(0.1).timeout
 	if has_node("/root/InteractionManager"):
 		get_node("/root/InteractionManager").enable_interaction()
+	
+	# Unfreeze player movement
+	var player = get_tree().get_first_node_in_group("player_cat")
+	if player and player.has_method("unfreeze"):
+		player.unfreeze()
 
 ## Reset all completed mini-games (call this when restarting the game)
 func reset_all_completions():

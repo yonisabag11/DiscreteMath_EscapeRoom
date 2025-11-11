@@ -1255,7 +1255,7 @@ sources/2 = SubResource("TileSetAtlasSource_o6by1")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7gs52"]
 size = Vector2(1, 24)
 
-[node name="Room1" type="Node2D"]
+[node name="Room3" type="Node2D"]
 script = ExtResource("1_7gs52")
 
 [node name="PlayerCat" parent="." instance=ExtResource("2_ekarj")]
@@ -1298,22 +1298,29 @@ position = Vector2(-121, -2)
 position = Vector2(-132, 0)
 shape = SubResource("RectangleShape2D_7gs52")
 
-[node name="InteractableObject" parent="." instance=ExtResource("8_ekarj")]
-position = Vector2(-80, 51)
+[node name="Sets_Minigame" parent="." instance=ExtResource("8_ekarj")]
+position = Vector2(-114, -43)
 scale = Vector2(2, 2)
 interaction_type = 1
 mini_game_scene = ExtResource("9_df8ri")
 interaction_label = "play"
 
-[node name="TableNote" parent="." instance=ExtResource("8_ekarj")]
-position = Vector2(-88, 17)
+[node name="RugHint" parent="." instance=ExtResource("8_ekarj")]
+position = Vector2(17, -24)
 scale = Vector2(2, 2)
 dialog_text = "A note under the rug displays the following:"
 interaction_label = "lift the rug"
 
-[node name="CollisionShape2D" parent="TableNote/InteractionArea" index="0"]
-position = Vector2(52.5, -21)
+[node name="InteractionArea" parent="RugHint" index="2"]
+position = Vector2(0.5, 5)
+
+[node name="CollisionShape2D" parent="RugHint/InteractionArea" index="0"]
+position = Vector2(-0.5, -5)
+
+[node name="InteractableObject" parent="." instance=ExtResource("8_ekarj")]
+position = Vector2(-80, 50)
+scale = Vector2(2, 2)
 
 [editable path="Doors/Door_W"]
-[editable path="InteractableObject"]
-[editable path="TableNote"]
+[editable path="Sets_Minigame"]
+[editable path="RugHint"]

@@ -7,6 +7,9 @@ class_name player_cat
 @export var max_hp: int = 6  # Maximum health points
 var current_hp: int = max_hp  # Current health points
 
+# Movement control
+var can_move: bool = true  # Controls whether the player can move
+
 # References to player's animation system and GUI
 @onready var animation_tree = $AnimationTree  # Controls sprite animations
 @onready var state_machine = animation_tree.get("parameters/playback")  # Manages animation states
@@ -27,6 +30,13 @@ func _on_spawn(spawn_pos: Vector2, direction: String) -> void:
 
 # Called every physics frame (60 times per second) - handles movement
 func _physics_process(_delta: float) -> void:
+	# Don't process movement if player can't move
+	if not can_move:
+		velocity = Vector2.ZERO
+		move_and_slide()
+		pick_new_state()
+		return
+	
 	# Get player input from WASD/arrow keys
 	var input_direction = Vector2(
 		Input.get_action_strength("right") - Input.get_action_strength("left"),
@@ -65,3 +75,14 @@ func _vector_from_direction(dir: String) -> Vector2:
 func take_damage(amount: int):
 	current_hp = max(0, current_hp - amount)  # Decrease HP, minimum 0
 	gui.update_hp(current_hp, max_hp)  # Update health display
+
+# Freeze player movement (called during dialogs/minigames)
+func freeze():
+	can_move = false
+	velocity = Vector2.ZERO
+	print("Player frozen")
+
+# Unfreeze player movement
+func unfreeze():
+	can_move = true
+	print("Player unfrozen")

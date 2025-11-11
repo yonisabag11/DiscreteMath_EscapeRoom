@@ -1824,13 +1824,13 @@ position = Vector2(0, -44)
 position = Vector2(0, -51)
 shape = SubResource("RectangleShape2D_wjiyn")
 
-[node name="InteractableObject" parent="." instance=ExtResource("8_jpl3p")]
+[node name="TruthTable_Minigame" parent="." instance=ExtResource("8_jpl3p")]
 interaction_type = 1
 mini_game_scene = ExtResource("9_aqxr5")
 
-[node name="CollisionShape2D" parent="InteractableObject/InteractionArea" index="0"]
+[node name="CollisionShape2D" parent="TruthTable_Minigame/InteractionArea" index="0"]
 position = Vector2(81, 54)
 shape = SubResource("CircleShape2D_nc6be")
 
 [editable path="Doors/Door_S"]
-[editable path="InteractableObject"]
+[editable path="TruthTable_Minigame"]

@@ -2008,7 +2008,7 @@ position = Vector2(122, -2)
 position = Vector2(132, 0.5)
 shape = SubResource("RectangleShape2D_qgpdn")
 
-[node name="Fridge" parent="." instance=ExtResource("10_myol5")]
+[node name="Cipher_Minigame" parent="." instance=ExtResource("10_myol5")]
 position = Vector2(5, -40)
 scale = Vector2(2, 2)
 interaction_type = 1
