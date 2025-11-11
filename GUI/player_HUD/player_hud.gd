@@ -7,12 +7,19 @@ var hearts : Array[ HeartGUI ] = []  # Array of heart GUI elements
 
 # Initialize the hearts array and set up initial display
 func _ready():
+	add_to_group("HUD")
 	# Collect all HeartGUI children from the HFlowContainer
 	for child in $Control/HFlowContainer.get_children():
 		if child is HeartGUI:
 			hearts.append( child )
 			child.visible = false  # Hide hearts initially
-	update_hp(6, 6)  # Show all hearts with full health
+	# Initialize from HealthManager so hearts persist across rooms
+	if has_node("/root/HealthManager"):
+		update_hp(HealthManager.current_hp, HealthManager.max_hp)
+		# Also listen for changes in case hearts change while HUD exists
+		HealthManager.hp_changed.connect(func(hp, max_hp): update_hp(hp, max_hp))
+	else:
+		update_hp(6, 6)  # Fallback if HealthManager is missing
 
 
 

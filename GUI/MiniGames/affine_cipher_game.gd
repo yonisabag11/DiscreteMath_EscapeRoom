@@ -167,20 +167,35 @@ func _on_wrong_answer():
 	attempts_made += 1
 	
 	if attempts_made >= max_attempts:
-		feedback_label.text = "✗ Wrong! The answer was: " + plaintext_answer
-		feedback_label.add_theme_color_override("font_color", Color.RED)
-		
-		# Disable input
+		# On attempts exhausted, lose a heart. Only show Game Over if that was the last heart.
 		answer_input.editable = false
 		submit_button.disabled = true
-		
-		# Show game over panel
-		await get_tree().create_timer(2.0).timeout
-		main_panel.visible = false
-		color_rect.visible = false
-		game_over_panel.show()
-		restart_button.grab_focus()
-		# Do NOT complete/close here; keep the Game Over panel so the player can restart
+
+		var last_heart = false
+		if has_node("/root/HealthManager"):
+			last_heart = HealthManager.will_lose_last_heart()
+
+		if last_heart:
+			# Reveal the correct answer then trigger last heart loss and show Game Over
+			feedback_label.text = "✗ Wrong! The answer was: " + plaintext_answer + "\nYou lost your last heart."
+			feedback_label.add_theme_color_override("font_color", Color.RED)
+			await get_tree().create_timer(1.2).timeout
+			if has_node("/root/HealthManager"):
+				HealthManager.lose_heart()
+			# Show in-mini-game Game Over screen
+			main_panel.visible = false
+			color_rect.visible = false
+			game_over_panel.show()
+			restart_button.grab_focus()
+			# Keep the panel; do not complete/close. Restart/Main Menu will handle scene change.
+		else:
+			# Lose a heart and close the mini-game as a failure so the player can retry later
+			feedback_label.text = "✗ Wrong! The answer was: " + plaintext_answer + "\nYou lost a heart."
+			feedback_label.add_theme_color_override("font_color", Color.RED)
+			await get_tree().create_timer(1.0).timeout
+			if has_node("/root/HealthManager"):
+				HealthManager.lose_heart()
+			complete_game(false)
 	else:
 		feedback_label.text = "✗ Incorrect. Try again!"
 		feedback_label.add_theme_color_override("font_color", Color.RED)
@@ -195,12 +210,16 @@ func _update_attempts_display():
 func _on_restart_pressed():
 	# Restore original behavior: restart the whole game by going back to the Lobby
 	MiniGameManager.reset_all_completions()
+	if has_node("/root/HealthManager"):
+		HealthManager.reset_hearts()
 	queue_free()
 	get_tree().change_scene_to_file("res://Levels/Lobby.tscn")
 
 func _on_main_menu_pressed():
 	# Reset the mini-game manager completion tracking
 	MiniGameManager.reset_all_completions()
+	if has_node("/root/HealthManager"):
+		HealthManager.reset_hearts()
 	# Destroy this mini-game instance completely
 	queue_free()
 	# Go to main menu
