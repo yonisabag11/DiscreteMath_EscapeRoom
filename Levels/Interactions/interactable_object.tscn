@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c0a8a4ml255ci" path="res://Interaction/Interaction Area/interaction_area.tscn" id="2_toykv"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sjntr"]
+radius = 13.0
 
 [node name="InteractableObject" type="StaticBody2D"]
 script = ExtResource("1_old7l")
