@@ -35,6 +35,7 @@ func close_game():
 		return
 	is_active = false
 	set_process_input(false)
+	print("Mini-game closing via ESC")
 	game_closed.emit()
 	# Don't hide immediately, let the manager handle cleanup
 
@@ -45,4 +46,5 @@ func _input(event):
 	
 	# Allow ESC to close the mini-game
 	if event.is_action_pressed("ui_cancel"):
+		get_viewport().set_input_as_handled()  # Consume the input
 		close_game()

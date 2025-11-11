@@ -132,14 +132,19 @@ func _show_mini_game() -> Dictionary:
 			_on_puzzle_failed()
 		# After closing the mini-game, ensure the prompt can show again by refreshing the area registration
 		if interaction_area and is_instance_valid(interaction_area):
+			await get_tree().create_timer(0.1).timeout  # Small delay for cleanup
 			InteractionManager.unregister_area(interaction_area)
 			InteractionManager.register_area(interaction_area)
+			InteractionManager.enable_interaction()  # Ensure interactions are re-enabled
 		return {"completed": true, "success": result_success}
 	else:  # closed_signal_fired
+		print("Mini-game was closed without completion")
 		# Refresh area registration so the [E] prompt returns immediately after a close
 		if interaction_area and is_instance_valid(interaction_area):
+			await get_tree().create_timer(0.1).timeout  # Small delay for cleanup
 			InteractionManager.unregister_area(interaction_area)
 			InteractionManager.register_area(interaction_area)
+			InteractionManager.enable_interaction()  # Ensure interactions are re-enabled
 		return {"completed": false, "success": false}
 
 # Mark the object as used
