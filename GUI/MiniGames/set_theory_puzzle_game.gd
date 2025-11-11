@@ -75,32 +75,24 @@ func _ready():
 func start_game():
 	super.start_game()
 	
-	# Check if the game was already failed
-	if persistent_game_failed:
-		# Show the game over panel immediately
-		main_panel.visible = false
-		color_rect.visible = false
-		game_over_panel.show()
-		restart_button.grab_focus()
-		return
-	
-	# Use persistent state to restore progress
+	# Restore persistent state so progress carries across re-entries
+	game_over_panel.hide()
 	attempts_made = persistent_attempts_made
 	rounds_completed = persistent_rounds_completed
-	current_round = persistent_rounds_completed  # Start from where we left off
+	current_round = persistent_rounds_completed  # Resume from where you left off
+	selected_cell = Vector2i(-1, -1)
+	feedback_label.text = ""
+	_update_attempts_display()
 	
-	game_over_panel.hide()
-	
-	# Check if all rounds are already completed
+	# Check if already completed all rounds
 	if rounds_completed >= total_rounds:
-		# Game already completed successfully
 		feedback_label.text = "🎉 You already completed all rounds!"
 		feedback_label.add_theme_color_override("font_color", Color.GREEN)
 		await get_tree().create_timer(2.0).timeout
 		complete_game(true)
 		return
 	
-	# Start next round
+	# Start next round (question will be randomized)
 	_start_new_round()
 
 func _start_new_round():
@@ -130,9 +122,8 @@ func _start_new_round():
 	# Generate the grid
 	_generate_grid()
 	
-	# Reset round state (but keep attempts from persistent state)
+	# Reset round state (but keep attempts from session)
 	selected_cell = Vector2i(-1, -1)
-	# Don't reset attempts_made here - we want to keep them across rounds
 	feedback_label.text = ""
 	_update_attempts_display()
 	
@@ -459,9 +450,11 @@ func _on_correct_answer():
 	await get_tree().create_timer(1.5).timeout
 	
 	if rounds_completed >= total_rounds:
-		# All rounds completed!
+		# All rounds completed! Reset persistent state for next full play-through
 		feedback_label.text = "🎉 Perfect! You found all the answers!"
 		feedback_label.add_theme_color_override("font_color", Color.GREEN)
+		persistent_attempts_made = 0
+		persistent_rounds_completed = 0
 		await get_tree().create_timer(2.0).timeout
 		complete_game(true)
 	else:
@@ -492,21 +485,38 @@ func _on_wrong_answer():
 			style_answer.corner_radius_bottom_right = 4
 			correct_button.add_theme_stylebox_override("normal", style_answer)
 		
-		# Mark game as permanently failed
-		persistent_game_failed = true
-		
 		# Disable interaction
 		submit_button.disabled = true
 		clear_button.disabled = true
 		for button in grid_buttons:
 			button.disabled = true
 		
-		# Hide main panel and background, then show game over panel
-		await get_tree().create_timer(2.0).timeout
-		main_panel.visible = false  # Hide the main game panel
-		color_rect.visible = false  # Hide the dark background overlay
-		game_over_panel.show()
-		restart_button.grab_focus()
+		var last_heart = false
+		if has_node("/root/HealthManager"):
+			last_heart = HealthManager.will_lose_last_heart()
+		
+		if last_heart:
+			feedback_label.text += "\nYou lost your last heart."
+			await get_tree().create_timer(1.2).timeout
+			if has_node("/root/HealthManager"):
+				HealthManager.lose_heart()
+			# Show in-mini-game Game Over
+			main_panel.visible = false
+			color_rect.visible = false
+			game_over_panel.show()
+			restart_button.grab_focus()
+		else:
+			feedback_label.text += "\nYou lost a heart."
+			await get_tree().create_timer(2.0).timeout  # Give time to read the message
+			if has_node("/root/HealthManager"):
+				HealthManager.lose_heart()
+			# Reset attempts and rounds for next entry
+			attempts_made = 0
+			persistent_attempts_made = 0
+			rounds_completed = 0
+			persistent_rounds_completed = 0
+			# Close the mini-game so they can re-enter when ready
+			complete_game(false)
 	else:
 		feedback_label.text = "✗ Incorrect. Try again!"
 		feedback_label.add_theme_color_override("font_color", Color.RED)
@@ -527,6 +537,8 @@ func _get_button_at_pos(pos: Vector2i) -> Button:
 func _on_restart_pressed():
 	# Reset the mini-game manager completion tracking
 	MiniGameManager.reset_all_completions()
+	if has_node("/root/HealthManager"):
+		HealthManager.reset_hearts()
 	# Reset persistent state so the game can be played again from the beginning
 	persistent_attempts_made = 0
 	persistent_rounds_completed = 0
@@ -539,6 +551,8 @@ func _on_restart_pressed():
 func _on_main_menu_pressed():
 	# Reset the mini-game manager completion tracking
 	MiniGameManager.reset_all_completions()
+	if has_node("/root/HealthManager"):
+		HealthManager.reset_hearts()
 	# Reset persistent state so the game can be played again from the beginning
 	persistent_attempts_made = 0
 	persistent_rounds_completed = 0
