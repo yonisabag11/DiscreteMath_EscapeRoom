@@ -16,9 +16,16 @@ const COL_LABELS: Array[String] = ["1", "2", "3", "4", "5"]
 @export var max_attempts_per_round: int = 3  # Attempts per question
 @export var total_rounds: int = 3  # Number of questions to ask
 
+# Game mode enum
+enum SetOperation {
+	INTERSECTION,  # Find elements in both sets (A ∩ B)
+	UNION_DIFF     # Find elements in union but not in intersection (A ∪ B) \ (A ∩ B)
+}
+
 # State
 var current_round: int = 0
 var rounds_completed: int = 0
+var current_operation: SetOperation  # Current operation type for this round
 var set_a_elements: Array[String] = []
 var set_b_elements: Array[String] = []
 var current_intersection_element: String = ""  # The ONE element in intersection for this round
@@ -74,20 +81,26 @@ func start_game():
 func _start_new_round():
 	current_round += 1
 	
-	# Update title to show progress
-	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find A ∩ B"
+	# Randomly choose between intersection and union for this round
+	current_operation = SetOperation.INTERSECTION if randf() < 0.5 else SetOperation.UNION_DIFF
 	
-	# Generate random sets with ONE intersection element
-	_generate_random_sets_single_intersection()
+	# Update title to show progress and operation
+	var operation_symbol = "∩" if current_operation == SetOperation.INTERSECTION else "∪"
+	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find A " + operation_symbol + " B"
+	
+	# Generate random sets based on the operation
+	if current_operation == SetOperation.INTERSECTION:
+		_generate_random_sets_single_intersection()
+	else:
+		_generate_random_sets_single_union_diff()
 	
 	# Display set information
 	var set_a_str = "A = {" + ", ".join(set_a_elements) + "}"
 	var set_b_str = "B = {" + ", ".join(set_b_elements) + "}"
 	set_info_label.text = set_a_str + "\n" + set_b_str
 	
-	# Show question
-	question_label.text = "Click the cell with the element in A ∩ B"
-	question_label.show()
+	# Hide the question label - users can figure it out from the title
+	question_label.hide()
 	
 	# Generate the grid
 	_generate_grid()
@@ -123,20 +136,20 @@ func _generate_random_sets_single_intersection():
 	
 	print("DEBUG Round ", current_round, ": Intersection pair: ", intersection_letter, " + ", intersection_number, " = ", current_intersection_element)
 	
-	# Build set A: MUST include BOTH the letter AND the number + 2-3 random others
+	# Build set A: MUST include BOTH the letter AND the number + 2-3 random others (4-5 total)
 	set_a_elements = [intersection_letter, intersection_number]
 	var remaining_for_a = all_elements.duplicate()
 	remaining_for_a.erase(intersection_letter)
 	remaining_for_a.erase(intersection_number)
 	remaining_for_a.shuffle()
 	
-	# Add 2-3 random elements to set A
-	for i in range(randi_range(2, 3)):
-		if i < remaining_for_a.size():
-			set_a_elements.append(remaining_for_a[i])
+	# Add 2-3 random elements to set A (to keep total at 4-5)
+	var num_extra_a = min(randi_range(2, 3), remaining_for_a.size())
+	for i in range(num_extra_a):
+		set_a_elements.append(remaining_for_a[i])
 	set_a_elements.shuffle()
 	
-	# Build set B: MUST include BOTH the letter AND the number + 2-3 different random others
+	# Build set B: MUST include BOTH the letter AND the number + 2-3 different random others (4-5 total)
 	set_b_elements = [intersection_letter, intersection_number]
 	var remaining_for_b = all_elements.duplicate()
 	remaining_for_b.erase(intersection_letter)
@@ -149,8 +162,9 @@ func _generate_random_sets_single_intersection():
 	
 	remaining_for_b.shuffle()
 	
-	# Add 2-3 random elements to set B (different from A's extras)
-	for i in range(min(randi_range(2, 3), remaining_for_b.size())):
+	# Add 2-3 random elements to set B (different from A's extras, to keep total at 4-5)
+	var num_extra_b = min(randi_range(2, 3), remaining_for_b.size())
+	for i in range(num_extra_b):
 		set_b_elements.append(remaining_for_b[i])
 	set_b_elements.shuffle()
 	
@@ -164,6 +178,89 @@ func _generate_random_sets_single_intersection():
 	print("DEBUG: Set B = ", set_b_elements, " (mixed)")
 	print("DEBUG: Intersection elements: {", intersection_letter, ", ", intersection_number, "}")
 	print("DEBUG: Grid coordinate: ", current_intersection_coord, " = ", ROW_LABELS[current_intersection_coord.y], COL_LABELS[current_intersection_coord.x])
+
+func _generate_random_sets_single_union_diff():
+	"""
+	Generate sets for UNION mode where we find a unique pairing.
+	Sets should share most elements, but ONE letter only in A and ONE number only in B.
+	Example: A = [a,b,c,d], B = [a,b,c,4] → answer is d4
+	The letter 'd' is only in A, and the number '4' is only in B.
+	All other elements (a,b,c) are shared between both sets.
+	"""
+	# Clear previous data
+	set_a_elements.clear()
+	set_b_elements.clear()
+	
+	# All possible elements
+	var all_letters: Array[String] = ["a", "b", "c", "d", "e"]
+	var all_numbers: Array[String] = ["1", "2", "3", "4", "5"]
+	
+	# Shuffle for randomness
+	all_letters.shuffle()
+	all_numbers.shuffle()
+	
+	# Pick ONE unique letter that will ONLY be in set A
+	var unique_letter = all_letters[0]
+	
+	# Pick ONE unique number that will ONLY be in set B
+	var unique_number = all_numbers[0]
+	
+	# The answer is the combination of these two unique elements
+	current_intersection_element = unique_letter + unique_number  # e.g., "d4"
+	
+	print("DEBUG Round ", current_round, " (UNION): Unique letter (only in A): ", unique_letter, ", Unique number (only in B): ", unique_number, " = ", current_intersection_element)
+	
+	# We need 4-5 total elements per set
+	# Strategy: 1 unique element + 3-4 common elements
+	
+	# Pick 2-3 common letters (will be in BOTH sets, excluding the unique letter)
+	var common_letters: Array[String] = []
+	var num_common_letters = randi_range(2, 3)
+	for i in range(1, min(1 + num_common_letters, all_letters.size())):
+		common_letters.append(all_letters[i])
+	
+	# Calculate how many common numbers we need (1-2) to reach 4-5 total
+	# Total = 1 unique + num_common_letters + num_common_numbers
+	# We want 4-5 total, so if we have 2 common letters, we need 1-2 numbers
+	# If we have 3 common letters, we need 0-1 numbers
+	var num_common_numbers = 4 - 1 - num_common_letters  # Base amount to reach 4
+	if randf() < 0.5:  # 50% chance to add one more to reach 5
+		num_common_numbers += 1
+	
+	var common_numbers: Array[String] = []
+	for i in range(1, min(1 + num_common_numbers, all_numbers.size())):
+		common_numbers.append(all_numbers[i])
+	
+	# Build set A: unique letter + common letters + common numbers (NO unique number from B)
+	set_a_elements.clear()
+	set_a_elements.append(unique_letter)
+	for letter in common_letters:
+		set_a_elements.append(letter)
+	for number in common_numbers:
+		set_a_elements.append(number)
+	set_a_elements.shuffle()
+	
+	# Build set B: unique number + common letters + common numbers (NO unique letter from A)
+	set_b_elements.clear()
+	set_b_elements.append(unique_number)
+	for letter in common_letters:
+		set_b_elements.append(letter)
+	for number in common_numbers:
+		set_b_elements.append(number)
+	set_b_elements.shuffle()
+	
+	# Set the grid coordinate based on the unique letter and unique number
+	var letter_row = ROW_LABELS.find(unique_letter)
+	var number_col = COL_LABELS.find(unique_number)
+	
+	current_intersection_coord = Vector2i(number_col, letter_row)
+	
+	print("DEBUG: Set A = ", set_a_elements, " (has ONLY unique letter '", unique_letter, "', NOT number '", unique_number, "')")
+	print("DEBUG: Set B = ", set_b_elements, " (has ONLY unique number '", unique_number, "', NOT letter '", unique_letter, "')")
+	print("DEBUG: Common elements: ", common_letters + common_numbers)
+	print("DEBUG: Union answer: ", current_intersection_element)
+	print("DEBUG: Grid coordinate: ", current_intersection_coord, " = ", ROW_LABELS[current_intersection_coord.y], COL_LABELS[current_intersection_coord.x])
+
 
 func _generate_grid():
 	# Clear existing grid
@@ -315,6 +412,7 @@ func _on_clear_pressed():
 	feedback_label.text = ""
 
 func _on_correct_answer():
+	var operation_name = "intersection (A ∩ B)" if current_operation == SetOperation.INTERSECTION else "union difference ((A ∪ B) \\ (A ∩ B))"
 	feedback_label.text = "✓ Correct! The answer is " + current_intersection_element
 	feedback_label.add_theme_color_override("font_color", Color.GREEN)
 	
@@ -336,7 +434,7 @@ func _on_correct_answer():
 	
 	if rounds_completed >= total_rounds:
 		# All rounds completed!
-		feedback_label.text = "🎉 Perfect! You found all intersections!"
+		feedback_label.text = "🎉 Perfect! You found all the answers!"
 		feedback_label.add_theme_color_override("font_color", Color.GREEN)
 		await get_tree().create_timer(2.0).timeout
 		complete_game(true)
