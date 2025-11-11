@@ -10,6 +10,11 @@ const base_text = "[E] to "  # Base text for interaction prompts
 var active_areas = []  # List of interaction areas the player is currently near
 var can_interact = true  # Whether the player can currently interact (prevents spam)
 
+# Public function to force re-enable interactions (useful for debugging or after mini-games)
+func enable_interaction():
+	can_interact = true
+	print("InteractionManager: Interactions manually enabled")
+
 # Set up the label styling
 func _ready():
 	var font = load("res://GUI/Font/PressStart2P-Regular.ttf")
@@ -67,7 +72,9 @@ func _sort_by_distance_to_player(area1, area2):
 func _input(event):
 	if event.is_action_pressed("Interact") and can_interact:
 		if active_areas.size() > 0:
+			get_viewport().set_input_as_handled()  # Consume the input
 			can_interact = false  # Disable interaction temporarily
 			label.hide()  # Hide the label
 			await active_areas[0].interact.call()  # Execute the interaction
 			can_interact = true  # Re-enable interaction
+			print("Interaction completed, can_interact set to true")

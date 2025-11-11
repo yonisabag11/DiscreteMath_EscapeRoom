@@ -56,14 +56,24 @@ func _on_mini_game_completed(success: bool, scene_path: String = ""):
 	if success and scene_path != "":
 		completed_mini_games[scene_path] = true
 	
+	print("MiniGameManager: Mini-game completed, success = ", success)
 	mini_game_completed.emit(success)
 	# Add a small delay before cleanup
 	await get_tree().create_timer(0.5).timeout
 	close_mini_game()
+	# Ensure the interaction manager is re-enabled
+	await get_tree().create_timer(0.1).timeout
+	if has_node("/root/InteractionManager"):
+		get_node("/root/InteractionManager").enable_interaction()
 
 func _on_mini_game_closed():
+	print("MiniGameManager: Mini-game closed signal received")
 	mini_game_closed.emit()
 	close_mini_game()
+	# Ensure the interaction manager is re-enabled after closing
+	await get_tree().create_timer(0.1).timeout
+	if has_node("/root/InteractionManager"):
+		get_node("/root/InteractionManager").enable_interaction()
 
 ## Reset all completed mini-games (call this when restarting the game)
 func reset_all_completions():
