@@ -13,8 +13,13 @@ const COL_LABELS: Array[String] = ["1", "2", "3", "4", "5"]
 
 # Game settings
 @export var puzzle_title: String = "Find A ∩ B"
-@export var max_attempts_per_round: int = 3  # Attempts per question
+@export var max_total_attempts: int = 5  # Total attempts for entire game (all rounds)
 @export var total_rounds: int = 3  # Number of questions to ask
+
+# Persistent state - these persist across game open/close
+static var persistent_attempts_made: int = 0  # Total attempts across all sessions
+static var persistent_rounds_completed: int = 0  # Number of rounds successfully completed
+static var persistent_game_failed: bool = false  # Whether the game was failed permanently
 
 # Game mode enum
 enum SetOperation {
@@ -70,12 +75,32 @@ func _ready():
 func start_game():
 	super.start_game()
 	
-	# Reset game state
-	current_round = 0
-	rounds_completed = 0
+	# Check if the game was already failed
+	if persistent_game_failed:
+		# Show the game over panel immediately
+		main_panel.visible = false
+		color_rect.visible = false
+		game_over_panel.show()
+		restart_button.grab_focus()
+		return
+	
+	# Use persistent state to restore progress
+	attempts_made = persistent_attempts_made
+	rounds_completed = persistent_rounds_completed
+	current_round = persistent_rounds_completed  # Start from where we left off
+	
 	game_over_panel.hide()
 	
-	# Start first round
+	# Check if all rounds are already completed
+	if rounds_completed >= total_rounds:
+		# Game already completed successfully
+		feedback_label.text = "🎉 You already completed all rounds!"
+		feedback_label.add_theme_color_override("font_color", Color.GREEN)
+		await get_tree().create_timer(2.0).timeout
+		complete_game(true)
+		return
+	
+	# Start next round
 	_start_new_round()
 
 func _start_new_round():
@@ -105,9 +130,9 @@ func _start_new_round():
 	# Generate the grid
 	_generate_grid()
 	
-	# Reset round state
+	# Reset round state (but keep attempts from persistent state)
 	selected_cell = Vector2i(-1, -1)
-	attempts_made = 0
+	# Don't reset attempts_made here - we want to keep them across rounds
 	feedback_label.text = ""
 	_update_attempts_display()
 	
@@ -428,6 +453,7 @@ func _on_correct_answer():
 		btn.disabled = true
 	
 	rounds_completed += 1
+	persistent_rounds_completed = rounds_completed  # Save progress
 	
 	# Wait a moment, then move to next round or complete
 	await get_tree().create_timer(1.5).timeout
@@ -444,8 +470,9 @@ func _on_correct_answer():
 
 func _on_wrong_answer():
 	attempts_made += 1
+	persistent_attempts_made = attempts_made  # Save to persistent state
 	
-	if attempts_made >= max_attempts_per_round:
+	if attempts_made >= max_total_attempts:
 		feedback_label.text = "✗ Wrong! The answer was " + current_intersection_element
 		feedback_label.add_theme_color_override("font_color", Color.RED)
 		
@@ -465,6 +492,9 @@ func _on_wrong_answer():
 			style_answer.corner_radius_bottom_right = 4
 			correct_button.add_theme_stylebox_override("normal", style_answer)
 		
+		# Mark game as permanently failed
+		persistent_game_failed = true
+		
 		# Disable interaction
 		submit_button.disabled = true
 		clear_button.disabled = true
@@ -483,8 +513,8 @@ func _on_wrong_answer():
 		_update_attempts_display()
 
 func _update_attempts_display():
-	var remaining = max_attempts_per_round - attempts_made
-	attempts_label.text = "Attempts remaining: " + str(remaining)
+	var remaining = max_total_attempts - attempts_made
+	attempts_label.text = "Total attempts remaining: " + str(remaining) + "/" + str(max_total_attempts)
 	attempts_label.show()
 
 func _get_button_at_pos(pos: Vector2i) -> Button:
@@ -497,6 +527,10 @@ func _get_button_at_pos(pos: Vector2i) -> Button:
 func _on_restart_pressed():
 	# Reset the mini-game manager completion tracking
 	MiniGameManager.reset_all_completions()
+	# Reset persistent state so the game can be played again from the beginning
+	persistent_attempts_made = 0
+	persistent_rounds_completed = 0
+	persistent_game_failed = false
 	# Destroy this mini-game instance completely
 	queue_free()
 	# Go back to the lobby (starting room)
@@ -505,6 +539,10 @@ func _on_restart_pressed():
 func _on_main_menu_pressed():
 	# Reset the mini-game manager completion tracking
 	MiniGameManager.reset_all_completions()
+	# Reset persistent state so the game can be played again from the beginning
+	persistent_attempts_made = 0
+	persistent_rounds_completed = 0
+	persistent_game_failed = false
 	# Destroy this mini-game instance completely
 	queue_free()
 	# Go to main menu
