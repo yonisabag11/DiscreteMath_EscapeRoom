@@ -60,6 +60,11 @@ func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 	var panel = get_meta("panel")
 	var text_label = get_meta("text_label")
 	
+	# Freeze player movement
+	var player = get_tree().get_first_node_in_group("player_cat")
+	if player and player.has_method("freeze"):
+		player.freeze()
+	
 	text_label.text = text
 	
 	# If custom position is provided (not -1, -1), use it
@@ -87,6 +92,12 @@ func hide_dialog():
 	var panel = get_meta("panel")
 	panel.hide()
 	is_displaying = false
+	
+	# Unfreeze player movement
+	var player = get_tree().get_first_node_in_group("player_cat")
+	if player and player.has_method("unfreeze"):
+		player.unfreeze()
+	
 	dialog_finished.emit()
 
 func _input(event):

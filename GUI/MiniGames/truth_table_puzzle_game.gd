@@ -13,8 +13,12 @@ const COLS: PackedStringArray = ["A","B","¬A","A ∧ B","A ∨ B","A → B","A 
 var rows: Array[Dictionary] = []
 var correct: Array[Array] = []
 var cell_nodes: Array[Array] = []
+var game_font: FontFile  # Store the game font
 
 func _ready() -> void:
+	# Load the game font
+	game_font = load("res://GUI/Font/PressStart2P-Regular.ttf")
+	
 	_build_rows()
 	_compute_correct()
 	_build_grid()
@@ -58,6 +62,8 @@ func _build_grid() -> void:
 		var h := Label.new()
 		h.text = title
 		h.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		h.add_theme_font_override("font", game_font)
+		h.add_theme_font_size_override("font_size", 12)
 		grid.add_child(h)
 
 	# Body
@@ -70,6 +76,8 @@ func _build_grid() -> void:
 				lbl.text = "T" if bool(correct[r_idx][c_idx]) else "F"
 				lbl.modulate = Color(0.8,0.8,0.8)
 				lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+				lbl.add_theme_font_override("font", game_font)
+				lbl.add_theme_font_size_override("font_size", 12)
 				grid.add_child(lbl)
 				row_nodes.append(lbl)
 			else:
@@ -77,6 +85,8 @@ func _build_grid() -> void:
 				btn.toggle_mode = true
 				btn.text = "?"
 				btn.focus_mode = Control.FOCUS_ALL
+				btn.add_theme_font_override("font", game_font)
+				btn.add_theme_font_size_override("font_size", 12)
 				btn.pressed.connect(func():
 					btn.text = "T" if btn.button_pressed else "F"
 				)

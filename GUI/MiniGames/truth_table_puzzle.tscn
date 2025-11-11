@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://d1st0awims1mh"]
+[gd_scene load_steps=4 format=3 uid="uid://d1st0awims1mh"]
 
 [ext_resource type="Script" uid="uid://cmwrniqhh55jj" path="res://GUI/MiniGames/truth_table_puzzle_game.gd" id="1_hifog"]
+[ext_resource type="FontFile" uid="uid://c8fgo04h80ehc" path="res://GUI/Font/PressStart2P-Regular.ttf" id="2_font"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iy381"]
 bg_color = Color(0.118581, 0.118581, 0.118581, 1)
@@ -45,6 +46,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_iy381")
 layout_mode = 1
 offset_right = 40.0
 offset_bottom = 23.0
+theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 28
 text = "Complete the Truth Table"
 horizontal_alignment = 1
@@ -81,14 +83,17 @@ alignment = 1
 
 [node name="CheckButton" type="Button" parent="Root/Center/Panel/Buttons"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
 text = "Check"
 
 [node name="ClearButton" type="Button" parent="Root/Center/Panel/Buttons"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
 text = "Clear"
 
 [node name="CloseButton" type="Button" parent="Root/Center/Panel/Buttons"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
 text = "Close
 "
 
@@ -100,5 +105,6 @@ anchor_right = 1.0
 offset_left = -40.0
 offset_bottom = 23.0
 grow_horizontal = 0
+theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 22
 horizontal_alignment = 1
