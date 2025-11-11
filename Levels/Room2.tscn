@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://bj5dhmegedccr"]
+[gd_scene load_steps=25 format=4 uid="uid://bj5dhmegedccr"]
 
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_wjiyn"]
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="2_ox8cn"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://wrwwbhbkkj7y" path="res://Art/Tilesets/TopDownHouse_FurnitureState2.png" id="5_nc6be"]
 [ext_resource type="Texture2D" uid="uid://qy1pltdp3opw" path="res://Art/Tilesets/TopDownHouse_FurnitureState1.png" id="6_7gajg"]
 [ext_resource type="PackedScene" uid="uid://ysll2p5ubnlv" path="res://Levels/Interactions/door.tscn" id="7_10kef"]
+[ext_resource type="PackedScene" uid="uid://cb65aat2wp7i3" path="res://Levels/Interactions/interactable_object.tscn" id="8_jpl3p"]
+[ext_resource type="PackedScene" uid="uid://d1st0awims1mh" path="res://GUI/MiniGames/truth_table_puzzle.tscn" id="9_aqxr5"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_xciqp"]
 texture = ExtResource("3_jpl3p")
@@ -1772,7 +1774,10 @@ sources/2 = SubResource("TileSetAtlasSource_o6by1")
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wjiyn"]
 size = Vector2(30, 1)
 
-[node name="Room1" type="Node2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_nc6be"]
+radius = 31.0
+
+[node name="Room2" type="Node2D"]
 script = ExtResource("1_wjiyn")
 
 [node name="PlayerCat" parent="." instance=ExtResource("2_ox8cn")]
@@ -1819,4 +1824,13 @@ position = Vector2(0, -44)
 position = Vector2(0, -51)
 shape = SubResource("RectangleShape2D_wjiyn")
 
+[node name="InteractableObject" parent="." instance=ExtResource("8_jpl3p")]
+interaction_type = 1
+mini_game_scene = ExtResource("9_aqxr5")
+
+[node name="CollisionShape2D" parent="InteractableObject/InteractionArea" index="0"]
+position = Vector2(81, 54)
+shape = SubResource("CircleShape2D_nc6be")
+
 [editable path="Doors/Door_S"]
+[editable path="InteractableObject"]
