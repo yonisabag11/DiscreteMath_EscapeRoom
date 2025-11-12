@@ -35,7 +35,11 @@ func _ready():
 	var text_label = RichTextLabel.new()
 	text_label.bbcode_enabled = true
 	text_label.fit_content = true
-	text_label.custom_minimum_size = Vector2(0, 80)  # Minimum height for short text
+	text_label.custom_minimum_size = Vector2(0, 50)  # Minimum height for short text
+	# Let the text label expand to fill available vertical space inside the VBoxContainer.
+	# This ensures the continue label stays in a fixed position at the bottom regardless of text length.
+	text_label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	text_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text_label.scroll_following = true
 	text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# Add font
