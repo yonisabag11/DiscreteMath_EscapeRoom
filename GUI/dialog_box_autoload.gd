@@ -17,8 +17,8 @@ func _ready():
 	# Create the UI elements
 	var panel = Panel.new()
 	panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	panel.custom_minimum_size = Vector2(0, 150)
-	panel.offset_top = -150
+	panel.custom_minimum_size = Vector2(0, 100)  # Start with minimum height
+	panel.offset_top = -100
 	dialog_instance.add_child(panel)
 	
 	var margin = MarginContainer.new()
@@ -35,18 +35,21 @@ func _ready():
 	var text_label = RichTextLabel.new()
 	text_label.bbcode_enabled = true
 	text_label.fit_content = true
-	text_label.custom_minimum_size = Vector2(0, 80)
+	text_label.custom_minimum_size = Vector2(0, 80)  # Minimum height for short text
+	text_label.scroll_following = true
+	text_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# Add font
 	var font = load("res://GUI/Font/PressStart2P-Regular.ttf")
 	text_label.add_theme_font_override("normal_font", font)
-	text_label.add_theme_font_size_override("normal_font_size", 10)
+	text_label.add_theme_font_size_override("normal_font_size", 8)
+	text_label.name = "TextLabel"  # Name it so we can find it later
 	vbox.add_child(text_label)
 	
 	var continue_label = Label.new()
 	continue_label.text = "[Space] to continue..."
 	continue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	continue_label.add_theme_font_override("font", font)
-	continue_label.add_theme_font_size_override("font_size", 8)
+	continue_label.add_theme_font_size_override("font_size", 6)
 	vbox.add_child(continue_label)
 	
 	# Store references
@@ -67,6 +70,19 @@ func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 	
 	text_label.text = text
 	
+	# Calculate dynamic height based on text content
+	# Wait one frame for the text to be processed
+	await get_tree().process_frame
+	
+	# Get the content height from the text label
+	var content_height = text_label.get_content_height()
+	
+	# Add margins and continue label (approximately 60px total for margins and continue button)
+	var total_height = content_height + 60
+	
+	# Clamp between minimum (100) and maximum (400) to keep it reasonable
+	total_height = clamp(total_height, 100, 400)
+	
 	# If custom position is provided (not -1, -1), use it
 	if position != Vector2(-1, -1):
 		panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
@@ -75,12 +91,12 @@ func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 		panel.offset_bottom = 0
 		panel.offset_left = 0
 		panel.offset_right = 0
-		panel.size = Vector2(400, 150)  # Fixed size for custom positioned dialogs
+		panel.size = Vector2(400, total_height)  # Dynamic size for custom positioned dialogs
 	else:
 		# Default bottom position
 		panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-		panel.custom_minimum_size = Vector2(0, 150)
-		panel.offset_top = -150
+		panel.custom_minimum_size = Vector2(0, total_height)
+		panel.offset_top = -total_height
 		panel.offset_bottom = 0
 		panel.offset_left = 0
 		panel.offset_right = 0
