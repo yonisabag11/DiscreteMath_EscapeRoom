@@ -40,7 +40,7 @@ var attempts_made: int = 0
 var grid_buttons: Array[Button] = []
 
 # UI References
-@onready var title_label: Label = $Panel/MarginContainer/VBoxContainer/TitleLabel
+@onready var title_label: RichTextLabel = $Panel/MarginContainer/VBoxContainer/TitleLabel
 @onready var question_label: Label = $Panel/MarginContainer/VBoxContainer/QuestionLabel
 @onready var set_info_label: Label = $Panel/MarginContainer/VBoxContainer/SetInfoLabel
 @onready var grid_container: GridContainer = $Panel/MarginContainer/VBoxContainer/CenterContainer/MarginContainer/GridContainer
@@ -55,10 +55,17 @@ var grid_buttons: Array[Button] = []
 @onready var restart_button: Button = $GameOverPanel/CenterPanel/MarginContainer/VBoxContainer/RestartButton
 @onready var main_menu_button: Button = $GameOverPanel/CenterPanel/MarginContainer/VBoxContainer/MainMenuButton
 
+
 func _ready():
 	super._ready()
-	
-	title_label.text = puzzle_title
+
+	# Enable BBCode on the title so we can resize the operation symbols
+	title_label.bbcode_enabled = true
+	# If puzzle_title contains the symbol characters, wrap them with a font_size tag
+	var formatted = puzzle_title
+	formatted = formatted.replace("∩", "[font_size=12]∩[/font_size]")
+	formatted = formatted.replace("∪", "[font_size=12]∪[/font_size]")
+	title_label.text = formatted
 	
 	# Set up grid - add 1 extra column and row for labels
 	grid_container.columns = GRID_COLS + 1
@@ -101,9 +108,10 @@ func _start_new_round():
 	# Randomly choose between intersection and union for this round
 	current_operation = SetOperation.INTERSECTION if randf() < 0.5 else SetOperation.UNION_DIFF
 	
-	# Update title to show progress and operation
+	# Update title to show progress and operation (use BBCode to enlarge the symbol)
 	var operation_symbol = "∩" if current_operation == SetOperation.INTERSECTION else "∪"
-	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find A " + operation_symbol + " B"
+	var op_bb = "[font_size=12]" + operation_symbol + "[/font_size]"
+	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find A " + op_bb + " B"
 	
 	# Generate random sets based on the operation
 	if current_operation == SetOperation.INTERSECTION:
