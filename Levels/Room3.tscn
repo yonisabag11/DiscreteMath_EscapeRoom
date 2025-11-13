@@ -1307,7 +1307,7 @@ interaction_label = "play"
 prompt_offset = Vector2(0, -50)
 
 [node name="VentHint" parent="." instance=ExtResource("8_ekarj")]
-position = Vector2(-56, -26)
+position = Vector2(-55, -25)
 dialog_text = "INTERSECTION: Find elements in BOTH sets.
 Example: A={a,b,c,3}, B={c,d,e,3} → Answer: c3 (c and 3 are in both)
 
