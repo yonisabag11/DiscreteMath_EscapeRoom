@@ -1584,7 +1584,8 @@ position = Vector2(133, 1)
 shape = SubResource("RectangleShape2D_v025o")
 
 [node name="PotHint" parent="." instance=ExtResource("10_xrkt0")]
-position = Vector2(-120, 55)
+position = Vector2(-119, 52)
+dialog_text = "Check the door to see your progress!"
 
 [node name="FinalDoor" parent="." instance=ExtResource("10_xrkt0")]
 position = Vector2(0, -53)

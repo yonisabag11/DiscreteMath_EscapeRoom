@@ -1299,37 +1299,37 @@ position = Vector2(-132, 0)
 shape = SubResource("RectangleShape2D_7gs52")
 
 [node name="Sets_Minigame" parent="." instance=ExtResource("8_ekarj")]
-position = Vector2(-114, -43)
+position = Vector2(17, -42)
 scale = Vector2(2, 2)
 interaction_type = 1
 mini_game_scene = ExtResource("9_df8ri")
 interaction_label = "play"
+prompt_offset = Vector2(0, -50)
 
-[node name="RugHint" parent="." instance=ExtResource("8_ekarj")]
-position = Vector2(17, -24)
-scale = Vector2(2, 2)
-dialog_text = "INTERSECTION ([font_size=12]∩[/font_size]): Find elements in BOTH sets.
+[node name="VentHint" parent="." instance=ExtResource("8_ekarj")]
+position = Vector2(-56, -26)
+dialog_text = "INTERSECTION: Find elements in BOTH sets.
 Example: A={a,b,c,3}, B={c,d,e,3} → Answer: c3 (c and 3 are in both)
 
-UNION ([font_size=12]∪[/font_size]): Find unique pairing.
+SYMMETRIC DIFFERENCE: Find unique pairing.
 Example: A={a,b,c,d}, B={a,b,c,4} → Answer: d4 (d only in A, 4 only in B)"
-interaction_label = "lift the rug"
+interaction_label = "check the vent"
 
-[node name="InteractionArea" parent="RugHint" index="2"]
+[node name="InteractionArea" parent="VentHint" index="2"]
 position = Vector2(0.5, 5)
 
-[node name="CollisionShape2D" parent="RugHint/InteractionArea" index="0"]
+[node name="CollisionShape2D" parent="VentHint/InteractionArea" index="0"]
 position = Vector2(-0.5, -5)
 
 [node name="IroningBoardHint" parent="." instance=ExtResource("8_ekarj")]
 position = Vector2(-80, 50)
 scale = Vector2(2, 2)
-dialog_text = "INTERSECTION ([font_size=12]∩[/font_size]): Click cells where letter AND number both appear in their sets.
+dialog_text = "INTERSECTION: Click cells where letter AND number both appear in their sets.
 
-UNION ([font_size=12]∪[/font_size]): Click cells where letter is ONLY in set A and number is ONLY in set B. They must NOT overlap."
+SYMMETRIC DIFFERENCE: Click cells where letter is ONLY in set A and number is ONLY in set B. They must NOT overlap."
 interaction_label = "read note"
 
 [editable path="Doors/Door_W"]
 [editable path="Sets_Minigame"]
-[editable path="RugHint"]
+[editable path="VentHint"]
 [editable path="IroningBoardHint"]

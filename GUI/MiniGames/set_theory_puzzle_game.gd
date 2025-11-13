@@ -24,7 +24,7 @@ static var persistent_game_failed: bool = false  # Whether the game was failed p
 # Game mode enum
 enum SetOperation {
 	INTERSECTION,  # Find elements in both sets (A ∩ B)
-	UNION_DIFF     # Find elements in union but not in intersection (A ∪ B) \ (A ∩ B)
+	SYMMETRIC_DIFF     # Find elements in symmetric difference (A ^ B)
 }
 
 # State
@@ -105,19 +105,22 @@ func start_game():
 func _start_new_round():
 	current_round += 1
 	
-	# Randomly choose between intersection and union for this round
-	current_operation = SetOperation.INTERSECTION if randf() < 0.5 else SetOperation.UNION_DIFF
+	# Randomly choose between intersection and symmetric difference for this round
+	current_operation = SetOperation.INTERSECTION if randf() < 0.5 else SetOperation.SYMMETRIC_DIFF
 	
-	# Update title to show progress and operation (use BBCode to enlarge the symbol)
-	var operation_symbol = "∩" if current_operation == SetOperation.INTERSECTION else "∪"
-	var op_bb = "[font_size=12]" + operation_symbol + "[/font_size]"
-	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find A " + op_bb + " B"
+	# Update title to show progress and operation (use BBCode to resize symbols)
+	var operation_text = ""
+	if current_operation == SetOperation.INTERSECTION:
+		operation_text = "A [font_size=12]∩[/font_size] B"
+	else:
+		operation_text = "(A - B) [font_size=12]∪[/font_size] (B - A)"
+	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find " + operation_text
 	
 	# Generate random sets based on the operation
 	if current_operation == SetOperation.INTERSECTION:
 		_generate_random_sets_single_intersection()
 	else:
-		_generate_random_sets_single_union_diff()
+		_generate_random_sets_single_symmetric_diff()
 	
 	# Display set information
 	var set_a_str = "A = {" + ", ".join(set_a_elements) + "}"
@@ -203,9 +206,9 @@ func _generate_random_sets_single_intersection():
 	print("DEBUG: Intersection elements: {", intersection_letter, ", ", intersection_number, "}")
 	print("DEBUG: Grid coordinate: ", current_intersection_coord, " = ", ROW_LABELS[current_intersection_coord.y], COL_LABELS[current_intersection_coord.x])
 
-func _generate_random_sets_single_union_diff():
+func _generate_random_sets_single_symmetric_diff():
 	"""
-	Generate sets for UNION mode where we find a unique pairing.
+	Generate sets for SYMMETRIC DIFFERENCE mode where we find a unique pairing.
 	Sets should share most elements, but ONE letter only in A and ONE number only in B.
 	Example: A = [a,b,c,d], B = [a,b,c,4] → answer is d4
 	The letter 'd' is only in A, and the number '4' is only in B.
@@ -232,7 +235,7 @@ func _generate_random_sets_single_union_diff():
 	# The answer is the combination of these two unique elements
 	current_intersection_element = unique_letter + unique_number  # e.g., "d4"
 	
-	print("DEBUG Round ", current_round, " (UNION): Unique letter (only in A): ", unique_letter, ", Unique number (only in B): ", unique_number, " = ", current_intersection_element)
+	print("DEBUG Round ", current_round, " (SYMMETRIC DIFF): Unique letter (only in A): ", unique_letter, ", Unique number (only in B): ", unique_number, " = ", current_intersection_element)
 	
 	# We need 4-5 total elements per set
 	# Strategy: 1 unique element + 3-4 common elements
@@ -282,7 +285,7 @@ func _generate_random_sets_single_union_diff():
 	print("DEBUG: Set A = ", set_a_elements, " (has ONLY unique letter '", unique_letter, "', NOT number '", unique_number, "')")
 	print("DEBUG: Set B = ", set_b_elements, " (has ONLY unique number '", unique_number, "', NOT letter '", unique_letter, "')")
 	print("DEBUG: Common elements: ", common_letters + common_numbers)
-	print("DEBUG: Union answer: ", current_intersection_element)
+	print("DEBUG: Symmetric difference answer: ", current_intersection_element)
 	print("DEBUG: Grid coordinate: ", current_intersection_coord, " = ", ROW_LABELS[current_intersection_coord.y], COL_LABELS[current_intersection_coord.x])
 
 
@@ -436,7 +439,7 @@ func _on_clear_pressed():
 	feedback_label.text = ""
 
 func _on_correct_answer():
-	var operation_name = "intersection (A ∩ B)" if current_operation == SetOperation.INTERSECTION else "union difference ((A ∪ B) \\ (A ∩ B))"
+	var operation_name = "intersection (A ∩ B)" if current_operation == SetOperation.INTERSECTION else "symmetric difference ((A - B) ∪ (B - A))"
 	feedback_label.text = "✓ Correct! The answer is " + current_intersection_element
 	feedback_label.add_theme_color_override("font_color", Color.GREEN)
 	
