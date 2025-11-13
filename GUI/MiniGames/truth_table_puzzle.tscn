@@ -8,7 +8,11 @@ bg_color = Color(0.118581, 0.118581, 0.118581, 1)
 
 [node name="TruthTablePuzzle" type="Control"]
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("1_hifog")
 metadata/_custom_type_script = "uid://cl7clonne0s1x"
 
@@ -38,7 +42,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Panel" type="Panel" parent="Root/Center"]
-custom_minimum_size = Vector2(900, 550)
+custom_minimum_size = Vector2(380, 220)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_iy381")
 
@@ -47,7 +51,7 @@ layout_mode = 1
 offset_right = 40.0
 offset_bottom = 23.0
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 10
 text = "Complete the Truth Table"
 horizontal_alignment = 1
 
@@ -56,15 +60,25 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 60.0
-offset_right = -20.0
-offset_bottom = -20.0
+offset_left = 5.0
+offset_top = 20.0
+offset_right = -5.0
+offset_bottom = -25.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/h_separation = 8
-theme_override_constants/v_separation = 8
+theme_override_constants/h_separation = 4
+theme_override_constants/v_separation = 2
 columns = 7
+
+[node name="AttemptsLabel" type="Label" parent="Root/Center/Panel"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 8
 
 [node name="Buttons" type="HBoxContainer" parent="Root/Center/Panel"]
 layout_mode = 1
@@ -84,16 +98,19 @@ alignment = 1
 [node name="CheckButton" type="Button" parent="Root/Center/Panel/Buttons"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 8
 text = "Check"
 
 [node name="ClearButton" type="Button" parent="Root/Center/Panel/Buttons"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 8
 text = "Clear"
 
 [node name="CloseButton" type="Button" parent="Root/Center/Panel/Buttons"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 8
 text = "Close
 "
 
@@ -106,5 +123,5 @@ offset_left = -40.0
 offset_bottom = 23.0
 grow_horizontal = 0
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 22
+theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
