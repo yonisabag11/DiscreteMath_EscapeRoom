@@ -1,10 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1st0awims1mh"]
+[gd_scene load_steps=3 format=3 uid="uid://d1st0awims1mh"]
 
 [ext_resource type="Script" uid="uid://cmwrniqhh55jj" path="res://GUI/MiniGames/truth_table_puzzle_game.gd" id="1_hifog"]
 [ext_resource type="FontFile" uid="uid://c8fgo04h80ehc" path="res://GUI/Font/PressStart2P-Regular.ttf" id="2_font"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iy381"]
-bg_color = Color(0.118581, 0.118581, 0.118581, 1)
 
 [node name="TruthTablePuzzle" type="Control"]
 layout_mode = 3
@@ -14,114 +11,188 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hifog")
-metadata/_custom_type_script = "uid://cl7clonne0s1x"
 
-[node name="Root" type="Control" parent="."]
+[node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
 
-[node name="BackDrop" type="ColorRect" parent="Root"]
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -130.0
+offset_right = 200.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 1)
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
 
-[node name="Center" type="CenterContainer" parent="Root"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Panel" type="Panel" parent="Root/Center"]
-custom_minimum_size = Vector2(380, 220)
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_iy381")
+theme_override_constants/separation = 4
 
-[node name="Header" type="Label" parent="Root/Center/Panel"]
-layout_mode = 1
-offset_right = 40.0
-offset_bottom = 23.0
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 10
-text = "Complete the Truth Table"
+theme_override_font_sizes/font_size = 7
+text = "Truth Table Puzzle"
 horizontal_alignment = 1
 
-[node name="TableGrid" type="GridContainer" parent="Root/Center/Panel"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = 20.0
-offset_right = -5.0
-offset_bottom = -25.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="InstructionsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 4
+text = "Complete the truth table
+Click cells to toggle T/F"
+horizontal_alignment = 1
+
+[node name="CenterContainer" type="CenterContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="TableGrid" type="GridContainer" parent="Panel/MarginContainer/VBoxContainer/CenterContainer"]
+layout_mode = 2
 theme_override_constants/h_separation = 4
 theme_override_constants/v_separation = 2
 columns = 7
 
-[node name="AttemptsLabel" type="Label" parent="Root/Center/Panel"]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -23.0
-offset_right = 40.0
-grow_vertical = 0
-theme_override_font_sizes/font_size = 8
-
-[node name="Buttons" type="HBoxContainer" parent="Root/Center/Panel"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -20.0
-offset_top = -40.0
-offset_right = 20.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_constants/separation = 20
+[node name="ButtonContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 4
 alignment = 1
 
-[node name="CheckButton" type="Button" parent="Root/Center/Panel/Buttons"]
+[node name="ClearButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(65, 16)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 8
-text = "Check"
-
-[node name="ClearButton" type="Button" parent="Root/Center/Panel/Buttons"]
-layout_mode = 2
-theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 8
+theme_override_font_sizes/font_size = 4
 text = "Clear"
 
-[node name="CloseButton" type="Button" parent="Root/Center/Panel/Buttons"]
+[node name="SubmitButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonContainer"]
+custom_minimum_size = Vector2(65, 16)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 8
-text = "Close
-"
+theme_override_font_sizes/font_size = 4
+text = "Submit"
 
-[node name="Feedback" type="Label" parent="Root/Center/Panel"]
+[node name="FeedbackLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 4
+horizontal_alignment = 1
+
+[node name="AttemptsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 3
+text = "Attempts remaining: 3"
+horizontal_alignment = 1
+
+[node name="CloseLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 3
+text = "[ESC] to close"
+horizontal_alignment = 2
+
+[node name="GameOverPanel" type="Panel" parent="."]
+visible = false
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -40.0
-offset_bottom = 23.0
-grow_horizontal = 0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="GameOverPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.85)
+
+[node name="CenterPanel" type="Panel" parent="GameOverPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -80.0
+offset_right = 150.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOverPanel/CenterPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOverPanel/CenterPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+alignment = 1
+
+[node name="GameOverLabel" type="Label" parent="GameOverPanel/CenterPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
 theme_override_fonts/font = ExtResource("2_font")
 theme_override_font_sizes/font_size = 10
+text = "GAME OVER"
 horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="GameOverPanel/CenterPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 6
+text = "You've run out of
+attempts!"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="GameOverPanel/CenterPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 7
+text = "Restart Game"
+
+[node name="MainMenuButton" type="Button" parent="GameOverPanel/CenterPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 25)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 7
+text = "Main Menu"

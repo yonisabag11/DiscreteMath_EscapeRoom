@@ -2,7 +2,7 @@ extends BaseMiniGame
 
 ## Truth Table Mini-Game
 ## Player must correctly complete the truth table for A, B with ¬, ∧, ∨, →, ↔.
-## Player has a limited number of attempts; on final failure they lose a heart,
+## Player has a limited number of attempts; on final failure they lose a heart
 
 # -------------------------------
 # CONFIG
@@ -26,14 +26,19 @@ var attempts_made: int = 0
 # UI NODES
 # -------------------------------
 
-@onready var panel: Panel = $Root/Center/Panel
-@onready var grid: GridContainer = $Root/Center/Panel/TableGrid
-@onready var feedback_label: Label = $Root/Center/Panel/Feedback
-@onready var attempts_label: Label = $Root/Center/Panel/AttemptsLabel
-@onready var check_button: Button = $Root/Center/Panel/Buttons/CheckButton
-@onready var clear_button: Button = $Root/Center/Panel/Buttons/ClearButton
-@onready var close_button: Button = $Root/Center/Panel/Buttons/CloseButton
-@onready var color_rect: ColorRect = $Root/ColorRect
+@onready var title_label: Label = $Panel/MarginContainer/VBoxContainer/TitleLabel
+@onready var instructions_label: Label = $Panel/MarginContainer/VBoxContainer/InstructionsLabel
+@onready var grid: GridContainer = $Panel/MarginContainer/VBoxContainer/CenterContainer/TableGrid
+@onready var submit_button: Button = $Panel/MarginContainer/VBoxContainer/ButtonContainer/SubmitButton
+@onready var clear_button: Button = $Panel/MarginContainer/VBoxContainer/ButtonContainer/ClearButton
+@onready var feedback_label: Label = $Panel/MarginContainer/VBoxContainer/FeedbackLabel
+@onready var attempts_label: Label = $Panel/MarginContainer/VBoxContainer/AttemptsLabel
+@onready var close_label: Label = $Panel/MarginContainer/VBoxContainer/CloseLabel
+@onready var color_rect: ColorRect = $ColorRect
+@onready var main_panel: Panel = $Panel
+@onready var game_over_panel: Panel = $GameOverPanel
+@onready var restart_button: Button = $GameOverPanel/CenterPanel/MarginContainer/VBoxContainer/RestartButton
+@onready var main_menu_button: Button = $GameOverPanel/CenterPanel/MarginContainer/VBoxContainer/MainMenuButton
 
 # -------------------------------
 # LIFECYCLE
@@ -44,9 +49,13 @@ func _ready() -> void:
 	super._ready()
 	
 	# Connect UI signals
-	check_button.pressed.connect(_on_check_pressed)
+	submit_button.pressed.connect(_on_submit_pressed)
 	clear_button.pressed.connect(_on_clear_pressed)
-	close_button.pressed.connect(_on_close_pressed)
+	
+	# Game over panel
+	game_over_panel.hide()
+	restart_button.pressed.connect(_on_restart_pressed)
+	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
 
 func start_game() -> void:
@@ -55,12 +64,14 @@ func start_game() -> void:
 	
 	attempts_made = 0
 	feedback_label.text = ""
+	game_over_panel.hide()
+	main_panel.show()
+	color_rect.show()
 	_update_attempts_display()
 	
-	# Ensure UI visible
-	panel.show()
-	if is_instance_valid(color_rect):
-		color_rect.show()
+	# Display game info
+	title_label.text = "Truth Table Puzzle"
+	instructions_label.text = "Complete the truth table\nClick cells to toggle T/F"
 	
 	_build_rows()
 	_compute_correct()
@@ -110,7 +121,8 @@ func _build_grid() -> void:
 		var lbl := Label.new()
 		lbl.text = title
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		lbl.add_theme_font_size_override("font_size", 12)
+		lbl.add_theme_color_override("font_color", Color.WHITE)
+		lbl.add_theme_font_size_override("font_size", 8)
 		grid.add_child(lbl)
 	
 	# Body rows
@@ -124,7 +136,7 @@ func _build_grid() -> void:
 				given_lbl.text = "T" if bool(correct[r_idx][c_idx]) else "F"
 				given_lbl.modulate = Color(0.8, 0.8, 0.8)
 				given_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-				given_lbl.add_theme_font_size_override("font_size", 12)
+				given_lbl.add_theme_font_size_override("font_size", 8)
 				grid.add_child(given_lbl)
 				row_nodes.append(given_lbl)
 			else:
@@ -132,8 +144,8 @@ func _build_grid() -> void:
 				var btn := Button.new()
 				btn.toggle_mode = true
 				btn.text = "?"
-				btn.custom_minimum_size = Vector2(20, 14)
-				btn.add_theme_font_size_override("font_size", 12)
+				btn.custom_minimum_size = Vector2(24, 18)
+				btn.add_theme_font_size_override("font_size", 8)
 				
 				btn.pressed.connect(func():
 					btn.text = "T" if btn.button_pressed else "F"
@@ -159,13 +171,7 @@ func _on_clear_pressed() -> void:
 				btn.text = "?"
 
 
-func _on_close_pressed() -> void:
-	# Player chose to exit without solving; treat as failure so they can retry later.
-	complete_game(false)
-	queue_free()
-
-
-func _on_check_pressed() -> void:
+func _on_submit_pressed() -> void:
 	var mistakes := 0
 	
 	# Count mistakes ONLY (no coloring)
@@ -192,11 +198,10 @@ func _on_check_pressed() -> void:
 		feedback_label.add_theme_color_override("font_color", Color.GREEN)
 		
 		# Disable buttons while we pause briefly
-		check_button.disabled = true
+		submit_button.disabled = true
 		clear_button.disabled = true
-		close_button.disabled = true
 		
-		await get_tree().create_timer(1.2).timeout
+		await get_tree().create_timer(2.0).timeout
 		complete_game(true)
 		return
 	
@@ -204,11 +209,10 @@ func _on_check_pressed() -> void:
 	# FAILURE ATTEMPT
 	# ------------------------------
 	attempts_made += 1
-	var remaining := max_attempts - attempts_made
 	
 	if attempts_made >= max_attempts:
 		# Out of attempts → lose heart (same logic pattern as affine cipher game)
-		check_button.disabled = true
+		submit_button.disabled = true
 		clear_button.disabled = true
 		
 		var last_heart := false
@@ -216,13 +220,16 @@ func _on_check_pressed() -> void:
 			last_heart = HealthManager.will_lose_last_heart()
 		
 		if last_heart:
-			feedback_label.text = "✗ Wrong. You ran out of attempts and lost your last heart."
+			feedback_label.text = "✗ Wrong. You lost your last heart."
 			feedback_label.add_theme_color_override("font_color", Color.RED)
 			await get_tree().create_timer(1.2).timeout
 			if has_node("/root/HealthManager"):
 				HealthManager.lose_heart()
-			# Let the main game handle Game Over scene; here we just end as failure.
-			complete_game(false)
+			# Show in-mini-game Game Over screen
+			main_panel.visible = false
+			color_rect.visible = false
+			game_over_panel.show()
+			restart_button.grab_focus()
 		else:
 			feedback_label.text = "✗ Wrong. You lost a heart."
 			feedback_label.add_theme_color_override("font_color", Color.RED)
@@ -240,3 +247,25 @@ func _on_check_pressed() -> void:
 func _update_attempts_display() -> void:
 	var remaining := max_attempts - attempts_made
 	attempts_label.text = "Attempts remaining: " + str(remaining)
+
+
+func _on_restart_pressed():
+	# Reset the mini-game manager completion tracking
+	MiniGameManager.reset_all_completions()
+	if has_node("/root/HealthManager"):
+		HealthManager.reset_hearts()
+	# Destroy this mini-game instance completely
+	queue_free()
+	# Go back to the lobby (starting room)
+	get_tree().change_scene_to_file("res://Levels/Lobby.tscn")
+
+
+func _on_main_menu_pressed():
+	# Reset the mini-game manager completion tracking
+	MiniGameManager.reset_all_completions()
+	if has_node("/root/HealthManager"):
+		HealthManager.reset_hearts()
+	# Destroy this mini-game instance completely
+	queue_free()
+	# Go to main menu
+	get_tree().change_scene_to_file("res://GUI/MainMenu.tscn")
