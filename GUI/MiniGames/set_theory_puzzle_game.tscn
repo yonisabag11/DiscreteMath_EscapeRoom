@@ -23,15 +23,9 @@ color = Color(0, 0, 0, 0.85)
 
 [node name="Panel" type="Panel" parent="."]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -100.0
-offset_right = 180.0
-offset_bottom = 100.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -82,7 +76,7 @@ size_flags_vertical = 3
 [node name="MarginContainer" type="MarginContainer" parent="Panel/MarginContainer/VBoxContainer/CenterContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
+theme_override_constants/margin_top = -58
 theme_override_constants/margin_right = 28
 theme_override_constants/margin_bottom = 0
 
@@ -92,40 +86,84 @@ theme_override_constants/h_separation = 1
 theme_override_constants/v_separation = 1
 columns = 5
 
-[node name="ButtonContainer" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="ButtonContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -70.0
+offset_top = -45.0
+offset_right = 70.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_constants/separation = 4
 alignment = 1
 
-[node name="ClearButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonContainer"]
+[node name="ClearButton" type="Button" parent="ButtonContainer"]
 custom_minimum_size = Vector2(65, 16)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 4
 text = "Clear"
 
-[node name="SubmitButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/ButtonContainer"]
+[node name="SubmitButton" type="Button" parent="ButtonContainer"]
 custom_minimum_size = Vector2(65, 16)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 4
 text = "Submit"
 
-[node name="FeedbackLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="FeedbackLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -60.0
+offset_right = 120.0
+offset_bottom = -50.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 4
 horizontal_alignment = 1
 
-[node name="AttemptsLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="AttemptsLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -20.0
+offset_right = 80.0
+offset_bottom = -5.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 3
 text = "Attempts remaining: 3"
 horizontal_alignment = 1
 
-[node name="CloseLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
-layout_mode = 2
+[node name="CloseLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -80.0
+offset_top = -20.0
+offset_right = -10.0
+offset_bottom = -5.0
+grow_horizontal = 0
+grow_vertical = 0
 theme_override_fonts/font = ExtResource("2")
 theme_override_font_sizes/font_size = 3
 text = "[ESC] to close"

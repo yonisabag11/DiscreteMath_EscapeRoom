@@ -29,11 +29,11 @@ var attempts_made: int = 0
 @onready var title_label: Label = $Panel/MarginContainer/VBoxContainer/TitleLabel
 @onready var instructions_label: Label = $Panel/MarginContainer/VBoxContainer/InstructionsLabel
 @onready var grid: GridContainer = $Panel/MarginContainer/VBoxContainer/CenterContainer/TableGrid
-@onready var submit_button: Button = $Panel/MarginContainer/VBoxContainer/ButtonContainer/SubmitButton
-@onready var clear_button: Button = $Panel/MarginContainer/VBoxContainer/ButtonContainer/ClearButton
-@onready var feedback_label: Label = $Panel/MarginContainer/VBoxContainer/FeedbackLabel
-@onready var attempts_label: Label = $Panel/MarginContainer/VBoxContainer/AttemptsLabel
-@onready var close_label: Label = $Panel/MarginContainer/VBoxContainer/CloseLabel
+@onready var submit_button: Button = $ButtonContainer/SubmitButton
+@onready var clear_button: Button = $ButtonContainer/ClearButton
+@onready var feedback_label: Label = $FeedbackLabel
+@onready var attempts_label: Label = $AttemptsLabel
+@onready var close_label: Label = $CloseLabel
 @onready var color_rect: ColorRect = $ColorRect
 @onready var main_panel: Panel = $Panel
 @onready var game_over_panel: Panel = $GameOverPanel
@@ -123,6 +123,8 @@ func _build_grid() -> void:
 		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		lbl.add_theme_color_override("font_color", Color.WHITE)
 		lbl.add_theme_font_size_override("font_size", 8)
+		# Make headers uniform size to match buttons
+		lbl.custom_minimum_size = Vector2(24, 18)
 		grid.add_child(lbl)
 	
 	# Body rows
@@ -131,14 +133,16 @@ func _build_grid() -> void:
 		
 		for c_idx in range(COLS.size()):
 			if c_idx <= 1:
-				# Given columns A, B
-				var given_lbl := Label.new()
-				given_lbl.text = "T" if bool(correct[r_idx][c_idx]) else "F"
-				given_lbl.modulate = Color(0.8, 0.8, 0.8)
-				given_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-				given_lbl.add_theme_font_size_override("font_size", 8)
-				grid.add_child(given_lbl)
-				row_nodes.append(given_lbl)
+				# Given columns A, B - make them look like grid cells
+				var given_btn := Button.new()
+				given_btn.text = "T" if bool(correct[r_idx][c_idx]) else "F"
+				# Bright cyan color for better contrast
+				given_btn.modulate = Color(0.4, 0.9, 1.0)
+				given_btn.custom_minimum_size = Vector2(24, 18)
+				given_btn.add_theme_font_size_override("font_size", 8)
+				given_btn.disabled = true  # Make them non-interactive
+				grid.add_child(given_btn)
+				row_nodes.append(given_btn)
 			else:
 				# Player input cells
 				var btn := Button.new()
