@@ -47,10 +47,11 @@ var attempts_made: int = 0
 @onready var input_container: HBoxContainer = $Panel/MarginContainer/VBoxContainer/InputContainer
 @onready var input_label: Label = $Panel/MarginContainer/VBoxContainer/InputContainer/InputLabel
 @onready var answer_input: LineEdit = $Panel/MarginContainer/VBoxContainer/InputContainer/AnswerInput
-@onready var submit_button: Button = $Panel/MarginContainer/VBoxContainer/SubmitButton
-@onready var feedback_label: Label = $Panel/MarginContainer/VBoxContainer/FeedbackLabel
-@onready var attempts_label: Label = $Panel/MarginContainer/VBoxContainer/AttemptsLabel
-@onready var close_label: Label = $Panel/MarginContainer/VBoxContainer/CloseLabel
+@onready var submit_button: Button = $ButtonContainer/SubmitButton
+@onready var clear_button: Button = $ButtonContainer/ClearButton
+@onready var feedback_label: Label = $FeedbackLabel
+@onready var attempts_label: Label = $AttemptsLabel
+@onready var close_label: Label = $CloseLabel
 @onready var color_rect: ColorRect = $ColorRect
 @onready var main_panel: Panel = $Panel
 @onready var game_over_panel: Panel = $GameOverPanel
@@ -62,6 +63,7 @@ func _ready():
 	
 	# Connect button signals
 	submit_button.pressed.connect(_on_submit_pressed)
+	clear_button.pressed.connect(_on_clear_pressed)
 	answer_input.text_submitted.connect(_on_text_submitted)
 	
 	# Game over panel
@@ -136,6 +138,12 @@ func _on_submit_pressed():
 
 func _on_text_submitted(_text: String):
 	_check_answer()
+
+func _on_clear_pressed():
+	answer_input.text = ""
+	feedback_label.text = "Cleared."
+	feedback_label.add_theme_color_override("font_color", Color.WHITE)
+	answer_input.grab_focus()
 
 func _check_answer():
 	var user_answer = answer_input.text.strip_edges().to_upper()
