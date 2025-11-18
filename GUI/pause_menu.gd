@@ -27,8 +27,13 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 func _input(event):
-	# Only handle ESC if no mini-game is active
+	# Only handle ESC if no mini-game is active and not in main menu
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		# Check if we're in the main menu scene
+		var current_scene = get_tree().current_scene
+		if current_scene and current_scene.name == "MainMenu":
+			return
+		
 		if MiniGameManager.current_mini_game == null:
 			toggle_pause()
 
