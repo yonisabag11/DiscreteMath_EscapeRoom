@@ -1,4 +1,5 @@
 extends BaseMiniGame
+class_name AffineCipherGame
 
 ## An Affine Cipher puzzle mini-game for Discrete Math
 ## Players must decrypt an encrypted message using the affine cipher formula
@@ -36,8 +37,15 @@ var multiplicative_key: int = 5
 var additive_shift: int = 3
 @export var max_attempts: int = 3  # Maximum attempts allowed
 
+# Persistent state
+static var persistent_attempts_made: int = 0
+
 # State
 var attempts_made: int = 0
+
+## Static method to reset persistent state (call when restarting game)
+static func reset_persistent_state():
+	persistent_attempts_made = 0
 
 # UI References
 @onready var title_label: Label = $Panel/MarginContainer/VBoxContainer/TitleLabel
@@ -77,8 +85,8 @@ func start_game():
 	# Select a random puzzle
 	_select_random_puzzle()
 	
-	# Reset game state
-	attempts_made = 0
+	# Restore persistent state
+	attempts_made = persistent_attempts_made
 	answer_input.text = ""
 	feedback_label.text = ""
 	game_over_panel.hide()
@@ -173,6 +181,7 @@ func _on_correct_answer():
 
 func _on_wrong_answer():
 	attempts_made += 1
+	persistent_attempts_made = attempts_made
 	
 	if attempts_made >= max_attempts:
 		# On attempts exhausted, lose a heart. Only show Game Over if that was the last heart.
@@ -203,6 +212,9 @@ func _on_wrong_answer():
 			await get_tree().create_timer(1.0).timeout
 			if has_node("/root/HealthManager"):
 				HealthManager.lose_heart()
+			# Reset attempts for next entry
+			attempts_made = 0
+			persistent_attempts_made = 0
 			complete_game(false)
 	else:
 		feedback_label.text = "✗ Incorrect. Try again!"
@@ -220,6 +232,8 @@ func _on_restart_pressed():
 	MiniGameManager.reset_all_completions()
 	if has_node("/root/HealthManager"):
 		HealthManager.reset_hearts()
+	# Reset static persistent state
+	AffineCipherGame.reset_persistent_state()
 	queue_free()
 	get_tree().change_scene_to_file("res://Levels/Lobby.tscn")
 
@@ -228,6 +242,8 @@ func _on_main_menu_pressed():
 	MiniGameManager.reset_all_completions()
 	if has_node("/root/HealthManager"):
 		HealthManager.reset_hearts()
+	# Reset static persistent state
+	AffineCipherGame.reset_persistent_state()
 	# Destroy this mini-game instance completely
 	queue_free()
 	# Go to main menu

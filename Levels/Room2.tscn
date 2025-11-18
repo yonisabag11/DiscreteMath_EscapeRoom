@@ -1827,10 +1827,38 @@ shape = SubResource("RectangleShape2D_wjiyn")
 [node name="TruthTable_Minigame" parent="." instance=ExtResource("8_jpl3p")]
 interaction_type = 1
 mini_game_scene = ExtResource("9_aqxr5")
+interaction_label = "play game"
+prompt_offset = Vector2(0, -15)
 
 [node name="CollisionShape2D" parent="TruthTable_Minigame/InteractionArea" index="0"]
 position = Vector2(81, 54)
 shape = SubResource("CircleShape2D_nc6be")
+
+[node name="BookShelfHint" parent="." instance=ExtResource("8_jpl3p")]
+position = Vector2(-88, -57)
+scale = Vector2(3, 3)
+dialog_text = "A dusty logic textbook sits on the shelf.
+
+Key Truth Table Operators:
+
+¬A (NOT): Flips the value
+A ∧ B (AND): True only if BOTH are true
+A ∨ B (OR): True if AT LEAST ONE is true
+A → B (IMPLIES): False only if A is true and B is false
+A ↔ B (IFF): True only if BOTH have the SAME value"
+interaction_label = "read a book"
+
+[node name="FirePlaceHint" parent="." instance=ExtResource("8_jpl3p")]
+position = Vector2(80, -52)
+scale = Vector2(2, 2)
+dialog_text = "A note is wedged behind the fireplace!
+
+Quick Truth Table Tips:
+
+→ (IMPLIES): Think 'if-then' - only false when promise is broken
+↔ (IFF): Same as 'equals' - true when both sides match
+¬(A ∧ B): Same as (¬A ∨ ¬B) - De Morgan's Law"
+interaction_label = "check the fire"
 
 [editable path="Doors/Door_S"]
 [editable path="TruthTable_Minigame"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=4 uid="uid://cyj2m526ptalv"]
+[gd_scene load_steps=27 format=4 uid="uid://cyj2m526ptalv"]
 
 [ext_resource type="PackedScene" uid="uid://cc7iroic6v6h2" path="res://Characters/player_cat.tscn" id="1_ipit3"]
 [ext_resource type="Script" uid="uid://0qst8y5byg4d" path="res://Levels/Interactions/Scripts/level.gd" id="1_v81qt"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://qy1pltdp3opw" path="res://Art/Tilesets/TopDownHouse_FurnitureState1.png" id="6_r50g8"]
 [ext_resource type="Texture2D" uid="uid://cermkryhj1xg7" path="res://Art/Tilesets/TopDownHouse_SmallItems.png" id="9_2uni1"]
 [ext_resource type="PackedScene" uid="uid://cb65aat2wp7i3" path="res://Levels/Interactions/interactable_object.tscn" id="10_xrkt0"]
+[ext_resource type="Script" uid="uid://bhxsr1ba5p5rf" path="res://Levels/Interactions/Scripts/final_door.gd" id="11_final"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cax11"]
 texture = ExtResource("9_2uni1")
@@ -1589,6 +1590,7 @@ dialog_text = "Check the door to see your progress!"
 
 [node name="FinalDoor" parent="." instance=ExtResource("10_xrkt0")]
 position = Vector2(0, -53)
+script = ExtResource("11_final")
 dialog_text = "This door is locked..."
 interaction_label = "open door"
 prompt_offset = Vector2(0, -20)

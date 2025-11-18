@@ -1303,16 +1303,22 @@ position = Vector2(17, -42)
 scale = Vector2(2, 2)
 interaction_type = 1
 mini_game_scene = ExtResource("9_df8ri")
-interaction_label = "play"
+interaction_label = "play game"
 prompt_offset = Vector2(0, -50)
 
 [node name="VentHint" parent="." instance=ExtResource("8_ekarj")]
 position = Vector2(-55, -25)
-dialog_text = "INTERSECTION: Find elements in BOTH sets.
-Example: A={a,b,c,3}, B={c,d,e,3} → Answer: c3 (c and 3 are in both)
+dialog_text = "A scribbled note is stuck in the vent!
 
-SYMMETRIC DIFFERENCE: Find unique pairing.
-Example: A={a,b,c,d}, B={a,b,c,4} → Answer: d4 (d only in A, 4 only in B)"
+Set Theory Quick Reference:
+
+INTERSECTION: Elements in BOTH sets
+Example: A={a,b,c,3}, B={c,d,e,3} → Answer: c3
+(Both 'c' and '3' appear in A AND B)
+
+SYMMETRIC DIFFERENCE: Elements in ONLY one set
+Example: A={a,b,c,d}, B={a,b,c,4} → Answer: d4
+('d' is ONLY in A, '4' is ONLY in B)"
 interaction_label = "check the vent"
 
 [node name="InteractionArea" parent="VentHint" index="2"]
@@ -1324,9 +1330,19 @@ position = Vector2(-0.5, -5)
 [node name="IroningBoardHint" parent="." instance=ExtResource("8_ekarj")]
 position = Vector2(-80, 50)
 scale = Vector2(2, 2)
-dialog_text = "INTERSECTION: Click cells where letter AND number both appear in their sets.
+dialog_text = "A crumpled paper lies on the ironing board.
 
-SYMMETRIC DIFFERENCE: Click cells where letter is ONLY in set A and number is ONLY in set B. They must NOT overlap."
+How to Play:
+
+INTERSECTION: Find the grid cell where:
+- The row letter appears in BOTH sets
+- The column number appears in BOTH sets
+- Click that cell!
+
+SYMMETRIC DIFFERENCE: Find the grid cell where:
+- The row letter is ONLY in set A (not in B)
+- The column number is ONLY in set B (not in A)
+- They form a unique pairing!"
 interaction_label = "read note"
 
 [editable path="Doors/Door_W"]
