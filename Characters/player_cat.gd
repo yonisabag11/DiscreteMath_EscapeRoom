@@ -13,7 +13,6 @@ var can_move: bool = true  # Controls whether the player can move
 # References to player's animation system and GUI
 @onready var animation_tree = $AnimationTree  # Controls sprite animations
 @onready var state_machine = animation_tree.get("parameters/playback")  # Manages animation states
-@onready var gui = get_tree().root.get_node("/GUI")  # Reference to the health GUI
 
 # Called when the player is added to the scene
 func _ready() -> void:
@@ -70,12 +69,7 @@ func _vector_from_direction(dir: String) -> Vector2:
 		"left": return Vector2(-1, 0)
 		"right": return Vector2(1, 0)
 	return Vector2(0, 1)  # Default to down if invalid direction
-
-# Reduces player health and updates the GUI
-func take_damage(amount: int):
-	current_hp = max(0, current_hp - amount)  # Decrease HP, minimum 0
-	gui.update_hp(current_hp, max_hp)  # Update health display
-
+	
 # Freeze player movement (called during dialogs/minigames)
 func freeze():
 	can_move = false
