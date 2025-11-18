@@ -14,25 +14,35 @@ func _get_progress_text() -> String:
 	var truth_complete = MiniGameManager.is_mini_game_completed(TRUTH_TABLE_GAME)
 	var sets_complete = MiniGameManager.is_mini_game_completed(SET_THEORY_GAME)
 	
+	var cipher_opened = MiniGameManager.is_mini_game_opened(CIPHER_GAME)
+	var truth_opened = MiniGameManager.is_mini_game_opened(TRUTH_TABLE_GAME)
+	var sets_opened = MiniGameManager.is_mini_game_opened(SET_THEORY_GAME)
+	
 	var text = ""
 	
 	# Cipher progress
 	if cipher_complete:
 		text += "[color=green]Cipher: Complete[/color]\n\n"
-	else:
+	elif cipher_opened:
 		text += "[color=red]Cipher: In Progress[/color]\n\n"
+	else:
+		text += "[color=gray]Cipher: Not Started[/color]\n\n"
 	
 	# Truth Table progress
 	if truth_complete:
 		text += "[color=green]Truth Tables: Complete[/color]\n\n"
-	else:
+	elif truth_opened:
 		text += "[color=red]Truth Tables: In Progress[/color]\n\n"
+	else:
+		text += "[color=gray]Truth Tables: Not Started[/color]\n\n"
 	
 	# Set Theory progress
 	if sets_complete:
 		text += "[color=green]Set Theory: Complete[/color]"
-	else:
+	elif sets_opened:
 		text += "[color=red]Set Theory: In Progress[/color]"
+	else:
+		text += "[color=gray]Set Theory: Not Started[/color]"
 	
 	return text
 

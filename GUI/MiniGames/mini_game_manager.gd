@@ -8,6 +8,8 @@ var mini_game_container: CanvasLayer = null
 
 # Track completed mini-games by their scene path
 var completed_mini_games: Dictionary = {}
+# Track which mini-games have been opened at least once
+var opened_mini_games: Dictionary = {}
 
 signal mini_game_completed(success: bool)
 signal mini_game_closed
@@ -36,6 +38,9 @@ func show_mini_game(game_scene: PackedScene) -> BaseMiniGame:
 	var player = get_tree().get_first_node_in_group("player_cat")
 	if player and player.has_method("freeze"):
 		player.freeze()
+	
+	# Mark this game as opened
+	opened_mini_games[scene_path] = true
 	
 	# Instantiate the new mini-game
 	current_mini_game = game_scene.instantiate()
@@ -93,8 +98,14 @@ func _on_mini_game_closed():
 ## Reset all completed mini-games (call this when restarting the game)
 func reset_all_completions():
 	completed_mini_games.clear()
+	opened_mini_games.clear()
 
 ## Check if a mini-game is completed
 func is_mini_game_completed(game_scene: PackedScene) -> bool:
 	var scene_path = game_scene.resource_path
 	return scene_path in completed_mini_games and completed_mini_games[scene_path]
+
+## Check if a mini-game has been opened at least once
+func is_mini_game_opened(game_scene: PackedScene) -> bool:
+	var scene_path = game_scene.resource_path
+	return scene_path in opened_mini_games and opened_mini_games[scene_path]
