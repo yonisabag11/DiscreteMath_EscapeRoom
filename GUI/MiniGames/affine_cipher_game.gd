@@ -42,6 +42,7 @@ static var persistent_attempts_made: int = 0
 
 # State
 var attempts_made: int = 0
+var game_over_shown: bool = false
 
 ## Static method to reset persistent state (call when restarting game)
 static func reset_persistent_state():
@@ -90,6 +91,7 @@ func start_game():
 	answer_input.text = ""
 	feedback_label.text = ""
 	game_over_panel.hide()
+	game_over_shown = false
 	main_panel.show()
 	color_rect.show()
 	
@@ -203,6 +205,7 @@ func _on_wrong_answer():
 			main_panel.visible = false
 			color_rect.visible = false
 			game_over_panel.show()
+			game_over_shown = true
 			restart_button.grab_focus()
 			# Keep the panel; do not complete/close. Restart/Main Menu will handle scene change.
 		else:
@@ -226,6 +229,19 @@ func _on_wrong_answer():
 func _update_attempts_display():
 	var remaining = max_attempts - attempts_made
 	attempts_label.text = "Attempts remaining: " + str(remaining)
+
+func _input(event):
+	if not is_active:
+		return
+	
+	# Block ESC if game over screen is shown
+	if event.is_action_pressed("ui_cancel"):
+		if game_over_shown:
+			get_viewport().set_input_as_handled()
+			return
+		else:
+			get_viewport().set_input_as_handled()
+			close_game()
 
 func _on_restart_pressed():
 	# Restore original behavior: restart the whole game by going back to the Lobby

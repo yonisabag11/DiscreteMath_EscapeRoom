@@ -45,6 +45,7 @@ var current_intersection_coord: Vector2i  # The correct coordinate for this roun
 var selected_cell: Vector2i = Vector2i(-1, -1)  # Only one selection at a time
 var attempts_made: int = 0
 var grid_buttons: Array[Button] = []
+var game_over_shown: bool = false
 
 # UI References
 @onready var title_label: RichTextLabel = $Panel/MarginContainer/VBoxContainer/TitleLabel
@@ -90,6 +91,7 @@ func start_game():
 	
 	# Restore persistent state so progress carries across re-entries
 	game_over_panel.hide()
+	game_over_shown = false
 	attempts_made = persistent_attempts_made
 	rounds_completed = persistent_rounds_completed
 	current_round = persistent_rounds_completed  # Resume from where you left off
@@ -522,6 +524,7 @@ func _on_wrong_answer():
 			main_panel.visible = false
 			color_rect.visible = false
 			game_over_panel.show()
+			game_over_shown = true
 			restart_button.grab_focus()
 		else:
 			feedback_label.text += "\nYou lost a heart."
@@ -551,6 +554,19 @@ func _get_button_at_pos(pos: Vector2i) -> Button:
 	if index >= 0 and index < grid_buttons.size():
 		return grid_buttons[index]
 	return null
+
+func _input(event):
+	if not is_active:
+		return
+	
+	# Block ESC if game over screen is shown
+	if event.is_action_pressed("ui_cancel"):
+		if game_over_shown:
+			get_viewport().set_input_as_handled()
+			return
+		else:
+			get_viewport().set_input_as_handled()
+			close_game()
 
 func _on_restart_pressed():
 	# Reset the mini-game manager completion tracking

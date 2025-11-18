@@ -46,6 +46,7 @@ func _ready():
 	var font = load("res://GUI/Font/PressStart2P-Regular.ttf")
 	text_label.add_theme_font_override("normal_font", font)
 	text_label.add_theme_font_size_override("normal_font_size", 8)
+	text_label.add_theme_constant_override("line_separation", 4)
 	text_label.name = "TextLabel"  # Name it so we can find it later
 	vbox.add_child(text_label)
 	

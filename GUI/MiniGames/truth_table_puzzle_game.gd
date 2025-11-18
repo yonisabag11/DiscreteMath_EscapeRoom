@@ -55,6 +55,7 @@ var cell_nodes: Array[Array] = []   # matching Controls [row][col]
 var prefilled_cells: Array[Vector2i] = []  # Track which cells are pre-filled
 
 var attempts_made: int = 0
+var game_over_shown: bool = false
 
 # -------------------------------
 # UI NODES
@@ -96,6 +97,7 @@ func start_game() -> void:
 	super.start_game()
 	
 	game_over_panel.hide()
+	game_over_shown = false
 	feedback_label.text = ""
 	_update_attempts_display()
 	
@@ -356,6 +358,7 @@ func _on_submit_pressed() -> void:
 			main_panel.visible = false
 			color_rect.visible = false
 			game_over_panel.show()
+			game_over_shown = true
 			restart_button.grab_focus()
 		else:
 			feedback_label.text = "✗ Wrong. You lost a heart."
@@ -376,6 +379,20 @@ func _on_submit_pressed() -> void:
 func _update_attempts_display() -> void:
 	var remaining := max_attempts - persistent_attempts_made
 	attempts_label.text = "Attempts remaining: " + str(remaining)
+
+
+func _input(event):
+	if not is_active:
+		return
+	
+	# Block ESC if game over screen is shown
+	if event.is_action_pressed("ui_cancel"):
+		if game_over_shown:
+			get_viewport().set_input_as_handled()
+			return
+		else:
+			get_viewport().set_input_as_handled()
+			close_game()
 
 
 func _on_restart_pressed():

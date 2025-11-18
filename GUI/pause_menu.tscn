@@ -98,6 +98,15 @@ offset_bottom = 200.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="ColorRect" type="ColorRect" parent="HowToPlayPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0156863, 0.0470588, 0.12549, 1)
+
 [node name="MarginContainer" type="MarginContainer" parent="HowToPlayPanel"]
 layout_mode = 1
 anchors_preset = 15
@@ -139,15 +148,15 @@ Solve puzzles and explore rooms
 to escape!
 
 Press ESC during mini-games
-to close them."
+to close them.
+
+Press ESC to exit this menu."
 autowrap_mode = 3
 
-[node name="BackButton" type="Button" parent="HowToPlayPanel/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(150, 30)
+[node name="CloseLabel" type="Label" parent="HowToPlayPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_hover_color = Color(0.8, 0.9, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
 theme_override_fonts/font = ExtResource("2_font")
-theme_override_font_sizes/font_size = 10
-text = "BACK"
+theme_override_font_sizes/font_size = 6
+text = "[ESC] to close"
+horizontal_alignment = 2

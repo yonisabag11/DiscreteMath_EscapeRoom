@@ -8,16 +8,15 @@ extends CanvasLayer
 @onready var resume_button: Button = $Panel/MarginContainer/VBoxContainer/MenuButtons/ResumeButton
 @onready var exit_button: Button = $Panel/MarginContainer/VBoxContainer/MenuButtons/ExitButton
 @onready var how_to_play_panel: Panel = $HowToPlayPanel
-@onready var back_button: Button = $HowToPlayPanel/MarginContainer/VBoxContainer/BackButton
 
 var is_paused: bool = false
+var help_panel_open: bool = false
 
 func _ready():
 	# Connect button signals
 	help_button.pressed.connect(_on_help_pressed)
 	resume_button.pressed.connect(_on_resume_pressed)
 	exit_button.pressed.connect(_on_exit_pressed)
-	back_button.pressed.connect(_on_back_pressed)
 	
 	# Hide initially
 	hide()
@@ -29,9 +28,18 @@ func _ready():
 func _input(event):
 	# Only handle ESC if no mini-game is active and not in main menu
 	if event.is_action_pressed("ui_cancel") and not event.is_echo():
+		# If help panel is open, close it and return to pause menu
+		if help_panel_open:
+			_on_back_pressed()
+			return
+		
 		# Check if we're in the main menu scene
 		var current_scene = get_tree().current_scene
 		if current_scene and current_scene.name == "MainMenu":
+			return
+		
+		# Check if win screen is open
+		if get_tree().root.has_node("WinScreen"):
 			return
 		
 		if MiniGameManager.current_mini_game == null:
@@ -49,11 +57,14 @@ func show_pause_menu():
 	show()
 	panel.show()
 	how_to_play_panel.hide()
+	help_panel_open = false
 	get_tree().paused = true
 	resume_button.grab_focus()
 
 func hide_pause_menu():
 	hide()
+	how_to_play_panel.hide()
+	help_panel_open = false
 	get_tree().paused = false
 	is_paused = false
 
@@ -64,11 +75,12 @@ func _on_help_pressed():
 	# Show the how to play panel
 	panel.hide()
 	how_to_play_panel.show()
-	back_button.grab_focus()
+	help_panel_open = true
 
 func _on_back_pressed():
 	# Hide the how to play panel
 	how_to_play_panel.hide()
+	help_panel_open = false
 	panel.show()
 	help_button.grab_focus()
 
