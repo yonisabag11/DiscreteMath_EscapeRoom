@@ -1312,7 +1312,7 @@ dialog_text = "A scribbled note is stuck in the vent!
 
 Set Theory Quick Reference:
 
-INTERSECTION (A ∩ B): Elements in BOTH sets
+INTERSECTION: Elements in BOTH sets
 Example: A={a,b,c,3}, B={c,d,e,3} → Answer: c3
 (Both 'c' and '3' appear in A AND B)
 
