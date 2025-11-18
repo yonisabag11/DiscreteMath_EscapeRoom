@@ -2013,7 +2013,7 @@ position = Vector2(5, -40)
 scale = Vector2(2, 2)
 interaction_type = 1
 mini_game_scene = ExtResource("11_afncp")
-interaction_label = "read recipe"
+interaction_label = "play game"
 prompt_offset = Vector2(-10, -33)
 
 [node name="TableNote" parent="." instance=ExtResource("10_myol5")]
@@ -2029,7 +2029,7 @@ interaction_label = "view note"
 prompt_offset = Vector2(0, -30)
 
 [node name="Cabinet" parent="." instance=ExtResource("10_myol5")]
-position = Vector2(-56, -35)
+position = Vector2(-57, -38)
 dialog_text = "A hidden message is scrawled into the inside of the cabinet door!
 
 It reads:

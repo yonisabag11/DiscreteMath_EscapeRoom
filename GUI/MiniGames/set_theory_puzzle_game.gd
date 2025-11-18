@@ -1,4 +1,5 @@
 extends BaseMiniGame
+class_name SetTheoryPuzzleGame
 
 ## A Set Theory puzzle mini-game for Discrete Math
 ## Players must find the intersection (A ∩ B) by clicking cells in a grid
@@ -13,13 +14,19 @@ const COL_LABELS: Array[String] = ["1", "2", "3", "4", "5"]
 
 # Game settings
 @export var puzzle_title: String = "Find A ∩ B"
-@export var max_total_attempts: int = 5  # Total attempts for entire game (all rounds)
+@export var max_total_attempts: int = 3  # Maximum attempts allowed
 @export var total_rounds: int = 3  # Number of questions to ask
 
 # Persistent state - these persist across game open/close
 static var persistent_attempts_made: int = 0  # Total attempts across all sessions
 static var persistent_rounds_completed: int = 0  # Number of rounds successfully completed
 static var persistent_game_failed: bool = false  # Whether the game was failed permanently
+
+## Static method to reset persistent state (call when restarting game)
+static func reset_persistent_state():
+	persistent_attempts_made = 0
+	persistent_rounds_completed = 0
+	persistent_game_failed = false
 
 # Game mode enum
 enum SetOperation {
@@ -435,7 +442,8 @@ func _on_clear_pressed():
 			_reset_button_style(button)
 		selected_cell = Vector2i(-1, -1)
 	
-	feedback_label.text = ""
+	feedback_label.text = "Cleared."
+	feedback_label.add_theme_color_override("font_color", Color.WHITE)
 
 func _on_correct_answer():
 	var operation_name = "intersection (A ∩ B)" if current_operation == SetOperation.INTERSECTION else "symmetric difference ((A - B) ∪ (B - A))"
@@ -461,7 +469,7 @@ func _on_correct_answer():
 	
 	if rounds_completed >= total_rounds:
 		# All rounds completed! Reset persistent state for next full play-through
-		feedback_label.text = "🎉 Perfect! You found all the answers!"
+		feedback_label.text = "Perfect! You found all the answers!"
 		feedback_label.add_theme_color_override("font_color", Color.GREEN)
 		persistent_attempts_made = 0
 		persistent_rounds_completed = 0
@@ -534,7 +542,7 @@ func _on_wrong_answer():
 
 func _update_attempts_display():
 	var remaining = max_total_attempts - attempts_made
-	attempts_label.text = "Total attempts remaining: " + str(remaining) + "/" + str(max_total_attempts)
+	attempts_label.text = "Attempts remaining: " + str(remaining)
 	attempts_label.show()
 
 func _get_button_at_pos(pos: Vector2i) -> Button:
@@ -549,10 +557,8 @@ func _on_restart_pressed():
 	MiniGameManager.reset_all_completions()
 	if has_node("/root/HealthManager"):
 		HealthManager.reset_hearts()
-	# Reset persistent state so the game can be played again from the beginning
-	persistent_attempts_made = 0
-	persistent_rounds_completed = 0
-	persistent_game_failed = false
+	# Reset static persistent state
+	SetTheoryPuzzleGame.reset_persistent_state()
 	# Destroy this mini-game instance completely
 	queue_free()
 	# Go back to the lobby (starting room)
@@ -563,10 +569,8 @@ func _on_main_menu_pressed():
 	MiniGameManager.reset_all_completions()
 	if has_node("/root/HealthManager"):
 		HealthManager.reset_hearts()
-	# Reset persistent state so the game can be played again from the beginning
-	persistent_attempts_made = 0
-	persistent_rounds_completed = 0
-	persistent_game_failed = false
+	# Reset static persistent state
+	SetTheoryPuzzleGame.reset_persistent_state()
 	# Destroy this mini-game instance completely
 	queue_free()
 	# Go to main menu

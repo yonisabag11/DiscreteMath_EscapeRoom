@@ -27,6 +27,10 @@ func _ready():
 func _on_start_pressed():
 	# Reset all mini-game completions when starting a new game
 	MiniGameManager.reset_all_completions()
+	# Reset all mini-game static persistent states
+	AffineCipherGame.reset_persistent_state()
+	TruthTablePuzzleGame.reset_persistent_state()
+	SetTheoryPuzzleGame.reset_persistent_state()
 	# Start the game by loading the lobby
 	get_tree().change_scene_to_packed(LOBBY_SCENE)
 
