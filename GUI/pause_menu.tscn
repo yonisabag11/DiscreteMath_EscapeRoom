@@ -144,11 +144,9 @@ E - Interact with objects
 ESC - Pause Menu
 
 OBJECTIVE:
-Solve puzzles and explore rooms
-to escape!
-
-Press ESC during mini-games
-to close them.
+Complete each puzzle to unlock
+the final door in the lobby
+and escape!
 
 Press ESC to exit this menu."
 autowrap_mode = 3

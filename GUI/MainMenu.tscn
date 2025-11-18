@@ -141,13 +141,12 @@ text = "CONTROLS:
 
 WASD or Arrow Keys - Move
 E - Interact with objects
+ESC - Pause Menu
 
 OBJECTIVE:
-Solve puzzles and explore rooms
-to escape!
-
-Press ESC during mini-games
-to close them."
+Complete each puzzle to unlock
+the final door in the lobby
+and escape!"
 autowrap_mode = 3
 
 [node name="BackButton" type="Button" parent="HowToPlayPanel/MarginContainer/VBoxContainer"]
