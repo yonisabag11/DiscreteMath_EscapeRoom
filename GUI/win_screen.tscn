@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=4 uid="uid://d2wv3x8yh3k4a"]
 
-[ext_resource type="FontFile" uid="uid://dbyaaa7dfqqqo" path="res://GUI/Font/PressStart2P-Regular.ttf" id="1_win"]
+[ext_resource type="FontFile" uid="uid://c8fgo04h80ehc" path="res://GUI/Font/PressStart2P-Regular.ttf" id="1_win"]
 [ext_resource type="Script" path="res://GUI/win_screen.gd" id="2_win"]
 
 [node name="WinScreen" type="CanvasLayer"]

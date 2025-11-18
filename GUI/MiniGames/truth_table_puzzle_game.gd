@@ -187,7 +187,7 @@ func _build_grid() -> void:
 	prefilled_cells.clear()
 	
 	# Select random cells to pre-fill as hints
-	var total_cells = rows.size() * current_columns.size()
+	var _total_cells = rows.size() * current_columns.size()
 	var prefill_positions: Array[Vector2i] = []
 	
 	# Generate all possible positions (excluding A and B columns which are always given)

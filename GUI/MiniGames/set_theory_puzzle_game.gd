@@ -446,7 +446,7 @@ func _on_clear_pressed():
 	feedback_label.add_theme_color_override("font_color", Color.WHITE)
 
 func _on_correct_answer():
-	var operation_name = "intersection (A ∩ B)" if current_operation == SetOperation.INTERSECTION else "symmetric difference ((A - B) ∪ (B - A))"
+	var _operation_name = "intersection (A ∩ B)" if current_operation == SetOperation.INTERSECTION else "symmetric difference ((A - B) ∪ (B - A))"
 	feedback_label.text = "✓ Correct! The answer is " + current_intersection_element
 	feedback_label.add_theme_color_override("font_color", Color.GREEN)
 	

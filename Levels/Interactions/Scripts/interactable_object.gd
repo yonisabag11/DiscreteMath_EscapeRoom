@@ -98,32 +98,35 @@ func _show_mini_game() -> Dictionary:
 		return {"completed": true, "success": true}
 	
 	# Wait for completion or closure
-	var completed_signal_fired = false
-	var closed_signal_fired = false
-	var result_success = false
-	
+	# Use a mutable dictionary to avoid confusable capture reassignment warnings
+	var signals = {
+		"completed": false,
+		"closed": false,
+		"success": false
+	}
+
 	var on_completed = func(success: bool):
-		if not closed_signal_fired:
-			completed_signal_fired = true
-			result_success = success
-	
+		if not signals["closed"]:
+			signals["completed"] = true
+			signals["success"] = success
+
 	var on_closed = func():
-		if not completed_signal_fired:
-			closed_signal_fired = true
+		if not signals["completed"]:
+			signals["closed"] = true
 	
 	MiniGameManager.mini_game_completed.connect(on_completed, CONNECT_ONE_SHOT)
 	MiniGameManager.mini_game_closed.connect(on_closed, CONNECT_ONE_SHOT)
 	
 	# Wait for either signal
-	while not completed_signal_fired and not closed_signal_fired:
+	while not signals["completed"] and not signals["closed"]:
 		if not is_instance_valid(self) or not is_inside_tree():
 			# Node is being freed, return early
 			return {"completed": false, "success": false}
 		await get_tree().process_frame
 	
-	if completed_signal_fired:
+	if signals["completed"]:
 		# Only block future re-entry on SUCCESS; failure allows trying again.
-		if result_success:
+		if signals["success"]:
 			mini_game_completed = true
 			puzzle_solved.emit()
 			_on_puzzle_solved()
@@ -136,7 +139,7 @@ func _show_mini_game() -> Dictionary:
 			InteractionManager.unregister_area(interaction_area)
 			InteractionManager.register_area(interaction_area)
 			InteractionManager.enable_interaction()  # Ensure interactions are re-enabled
-		return {"completed": true, "success": result_success}
+		return {"completed": true, "success": signals["success"]}
 	else:  # closed_signal_fired
 		print("Mini-game was closed without completion")
 		# Refresh area registration so the [E] prompt returns immediately after a close

@@ -32,7 +32,7 @@ func unregister_area(area: InteractionArea):
 		active_areas.remove_at(index)
 
 # Update the interaction label position and text every frame
-func _process(delta):
+func _process(_delta):
 	if active_areas.size() > 0 and can_interact:
 		active_areas.sort_custom(_sort_by_distance_to_player)  # Sort by closest first
 		var area = active_areas[0]  # Get the closest interaction area

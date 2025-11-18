@@ -11,9 +11,9 @@ var interact: Callable = func():  # Function to call when player presses E (set 
 	pass
 
 # Called when the player enters the interaction area
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(_body: Node2D) -> void:
 	InteractionManager.register_area(self)  # Add this area to the active interactions
 
 # Called when the player leaves the interaction area
-func _on_body_exited(body: Node2D) -> void:
+func _on_body_exited(_body: Node2D) -> void:
 	InteractionManager.unregister_area(self)  # Remove this area from active interactions
