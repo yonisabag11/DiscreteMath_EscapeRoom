@@ -1,0 +1,153 @@
+[gd_scene load_steps=3 format=4 uid="uid://csqm5y6wbp3ja"]
+
+[ext_resource type="Script" path="res://GUI/pause_menu.gd" id="1_pause"]
+[ext_resource type="FontFile" uid="uid://c8fgo04h80ehc" path="res://GUI/Font/PressStart2P-Regular.ttf" id="2_font"]
+
+[node name="PauseMenu" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_pause")
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.7)
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 100
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 24
+text = "PAUSED"
+horizontal_alignment = 1
+
+[node name="MenuButtons" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="ResumeButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/MenuButtons"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(0.8, 0.9, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "RESUME"
+
+[node name="HelpButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/MenuButtons"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(0.8, 0.9, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "HELP"
+
+[node name="ExitButton" type="Button" parent="Panel/MarginContainer/VBoxContainer/MenuButtons"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(0.8, 0.9, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 12
+text = "EXIT TO MENU"
+
+[node name="HowToPlayPanel" type="Panel" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -200.0
+offset_right = 250.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HowToPlayPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HowToPlayPanel/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="TitleLabel" type="Label" parent="HowToPlayPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 14
+text = "HOW TO PLAY"
+horizontal_alignment = 1
+
+[node name="InstructionsLabel" type="Label" parent="HowToPlayPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 8
+text = "CONTROLS:
+
+WASD or Arrow Keys - Move
+E - Interact with objects
+ESC - Pause Menu
+
+OBJECTIVE:
+Solve puzzles and explore rooms
+to escape!
+
+Press ESC during mini-games
+to close them."
+autowrap_mode = 3
+
+[node name="BackButton" type="Button" parent="HowToPlayPanel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_hover_color = Color(0.8, 0.9, 1, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 10
+text = "BACK"
