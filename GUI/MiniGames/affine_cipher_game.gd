@@ -39,14 +39,19 @@ var additive_shift: int = 3
 
 # Persistent state
 static var persistent_attempts_made: int = 0
+static var persistent_puzzle_index: int = -1  # Locked puzzle index
+static var persistent_question_locked: bool = false  # Whether question is locked
 
 # State
 var attempts_made: int = 0
 var game_over_shown: bool = false
+var completing_game: bool = false  # Flag to block ESC during completion sequences
 
 ## Static method to reset persistent state (call when restarting game)
 static func reset_persistent_state():
 	persistent_attempts_made = 0
+	persistent_puzzle_index = -1
+	persistent_question_locked = false
 
 # UI References
 @onready var title_label: Label = $Panel/MarginContainer/VBoxContainer/TitleLabel
@@ -83,8 +88,20 @@ func _ready():
 func start_game():
 	super.start_game()
 	
-	# Select a random puzzle
-	_select_random_puzzle()
+	# Select or restore puzzle
+	if persistent_question_locked and persistent_puzzle_index >= 0:
+		# Restore locked puzzle
+		var puzzle = PUZZLE_DATABASE[persistent_puzzle_index]
+		plaintext_answer = puzzle[0]
+		multiplicative_key = puzzle[1]
+		additive_shift = puzzle[2]
+		encrypted_message = _encrypt_text(plaintext_answer, multiplicative_key, additive_shift)
+		print("DEBUG: Restored locked puzzle index ", persistent_puzzle_index)
+	else:
+		# Select a random puzzle and lock it
+		_select_random_puzzle()
+		persistent_question_locked = true
+		print("DEBUG: Locked new puzzle index ", persistent_puzzle_index)
 	
 	# Restore persistent state
 	attempts_made = persistent_attempts_made
@@ -112,8 +129,8 @@ func start_game():
 ## Select a random puzzle from the database and encrypt it
 func _select_random_puzzle():
 	# Randomly pick a puzzle
-	var puzzle_index = randi() % PUZZLE_DATABASE.size()
-	var puzzle = PUZZLE_DATABASE[puzzle_index]
+	persistent_puzzle_index = randi() % PUZZLE_DATABASE.size()
+	var puzzle = PUZZLE_DATABASE[persistent_puzzle_index]
 	
 	plaintext_answer = puzzle[0]
 	multiplicative_key = puzzle[1]
@@ -170,6 +187,9 @@ func _check_answer():
 		_on_wrong_answer()
 
 func _on_correct_answer():
+	# Block ESC during completion sequence
+	completing_game = true
+	
 	feedback_label.text = "✓ Correct! You decrypted the message!"
 	feedback_label.add_theme_color_override("font_color", Color.GREEN)
 	
@@ -186,6 +206,9 @@ func _on_wrong_answer():
 	persistent_attempts_made = attempts_made
 	
 	if attempts_made >= max_attempts:
+		# Block ESC during completion sequence
+		completing_game = true
+		
 		# On attempts exhausted, lose a heart. Only show Game Over if that was the last heart.
 		answer_input.editable = false
 		submit_button.disabled = true
@@ -215,9 +238,10 @@ func _on_wrong_answer():
 			await get_tree().create_timer(1.0).timeout
 			if has_node("/root/HealthManager"):
 				HealthManager.lose_heart()
-			# Reset attempts for next entry
+			# Reset attempts for next entry and unlock question for new randomization
 			attempts_made = 0
 			persistent_attempts_made = 0
+			persistent_question_locked = false  # Unlock so next time gets a new question
 			complete_game(false)
 	else:
 		feedback_label.text = "✗ Incorrect. Try again!"
@@ -228,15 +252,15 @@ func _on_wrong_answer():
 
 func _update_attempts_display():
 	var remaining = max_attempts - attempts_made
-	attempts_label.text = "Attempts remaining: " + str(remaining)
+	attempts_label.text = "Attempts remaining: " + str(remaining) + "\n(All 3 attempts = 1 heart)"
 
 func _input(event):
 	if not is_active:
 		return
 	
-	# Block ESC if game over screen is shown
+	# Block ESC if game over screen is shown or during completion sequence
 	if event.is_action_pressed("ui_cancel"):
-		if game_over_shown:
+		if game_over_shown or completing_game:
 			get_viewport().set_input_as_handled()
 			return
 		else:

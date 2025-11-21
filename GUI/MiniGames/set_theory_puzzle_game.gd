@@ -21,12 +21,24 @@ const COL_LABELS: Array[String] = ["1", "2", "3", "4", "5"]
 static var persistent_attempts_made: int = 0  # Total attempts across all sessions
 static var persistent_rounds_completed: int = 0  # Number of rounds successfully completed
 static var persistent_game_failed: bool = false  # Whether the game was failed permanently
+static var persistent_current_operation: SetOperation = SetOperation.INTERSECTION  # Locked operation for current round
+static var persistent_set_a_elements: Array[String] = []  # Locked set A
+static var persistent_set_b_elements: Array[String] = []  # Locked set B
+static var persistent_intersection_element: String = ""  # Locked answer
+static var persistent_intersection_coord: Vector2i = Vector2i(-1, -1)  # Locked coordinate
+static var persistent_question_locked: bool = false  # Whether we have a locked question
 
 ## Static method to reset persistent state (call when restarting game)
 static func reset_persistent_state():
 	persistent_attempts_made = 0
 	persistent_rounds_completed = 0
 	persistent_game_failed = false
+	persistent_current_operation = SetOperation.INTERSECTION
+	persistent_set_a_elements.clear()
+	persistent_set_b_elements.clear()
+	persistent_intersection_element = ""
+	persistent_intersection_coord = Vector2i(-1, -1)
+	persistent_question_locked = false
 
 # Game mode enum
 enum SetOperation {
@@ -46,6 +58,7 @@ var selected_cell: Vector2i = Vector2i(-1, -1)  # Only one selection at a time
 var attempts_made: int = 0
 var grid_buttons: Array[Button] = []
 var game_over_shown: bool = false
+var completing_game: bool = false  # Flag to block ESC during completion sequences
 
 # UI References
 @onready var title_label: RichTextLabel = $Panel/MarginContainer/VBoxContainer/TitleLabel
@@ -113,8 +126,33 @@ func start_game():
 func _start_new_round():
 	current_round += 1
 	
-	# Randomly choose between intersection and symmetric difference for this round
-	current_operation = SetOperation.INTERSECTION if randf() < 0.5 else SetOperation.SYMMETRIC_DIFF
+	# Check if we have a locked question from previous attempt
+	if persistent_question_locked:
+		# Restore the locked question
+		current_operation = persistent_current_operation
+		set_a_elements = persistent_set_a_elements.duplicate()
+		set_b_elements = persistent_set_b_elements.duplicate()
+		current_intersection_element = persistent_intersection_element
+		current_intersection_coord = persistent_intersection_coord
+		print("DEBUG: Restored locked question - Answer: ", current_intersection_element)
+	else:
+		# Generate a new random question and lock it
+		current_operation = SetOperation.INTERSECTION if randf() < 0.5 else SetOperation.SYMMETRIC_DIFF
+		
+		# Generate random sets based on the operation
+		if current_operation == SetOperation.INTERSECTION:
+			_generate_random_sets_single_intersection()
+		else:
+			_generate_random_sets_single_symmetric_diff()
+		
+		# Lock this question for subsequent attempts
+		persistent_question_locked = true
+		persistent_current_operation = current_operation
+		persistent_set_a_elements = set_a_elements.duplicate()
+		persistent_set_b_elements = set_b_elements.duplicate()
+		persistent_intersection_element = current_intersection_element
+		persistent_intersection_coord = current_intersection_coord
+		print("DEBUG: Locked new question - Answer: ", current_intersection_element)
 	
 	# Update title to show progress and operation (use BBCode to resize symbols)
 	var operation_text = ""
@@ -123,12 +161,6 @@ func _start_new_round():
 	else:
 		operation_text = "(A - B) [font_size=12]∪[/font_size] (B - A)"
 	title_label.text = "Round " + str(current_round) + "/" + str(total_rounds) + ": Find " + operation_text
-	
-	# Generate random sets based on the operation
-	if current_operation == SetOperation.INTERSECTION:
-		_generate_random_sets_single_intersection()
-	else:
-		_generate_random_sets_single_symmetric_diff()
 	
 	# Display set information
 	var set_a_str = "A = {" + ", ".join(set_a_elements) + "}"
@@ -144,6 +176,7 @@ func _start_new_round():
 	# Reset round state (but keep attempts from session)
 	selected_cell = Vector2i(-1, -1)
 	feedback_label.text = ""
+	completing_game = false  # Re-enable ESC for the new round
 	_update_attempts_display()
 	
 	# Enable buttons
@@ -452,6 +485,9 @@ func _on_correct_answer():
 	feedback_label.text = "✓ Correct! The answer is " + current_intersection_element
 	feedback_label.add_theme_color_override("font_color", Color.GREEN)
 	
+	# Block ESC during completion sequence
+	completing_game = true
+	
 	# Highlight correct cell
 	var button = _get_button_at_pos(selected_cell)
 	if button:
@@ -466,6 +502,9 @@ func _on_correct_answer():
 	rounds_completed += 1
 	persistent_rounds_completed = rounds_completed  # Save progress
 	
+	# Unlock question for next round
+	persistent_question_locked = false
+	
 	# Wait a moment, then move to next round or complete
 	await get_tree().create_timer(1.5).timeout
 	
@@ -478,7 +517,7 @@ func _on_correct_answer():
 		await get_tree().create_timer(2.0).timeout
 		complete_game(true)
 	else:
-		# Start next round
+		# Start next round with a new question
 		_start_new_round()
 
 func _on_wrong_answer():
@@ -486,6 +525,9 @@ func _on_wrong_answer():
 	persistent_attempts_made = attempts_made  # Save to persistent state
 	
 	if attempts_made >= max_total_attempts:
+		# Block ESC during completion sequence
+		completing_game = true
+		
 		feedback_label.text = "✗ Wrong! The answer was " + current_intersection_element
 		feedback_label.add_theme_color_override("font_color", Color.RED)
 		
@@ -531,12 +573,11 @@ func _on_wrong_answer():
 			await get_tree().create_timer(2.0).timeout  # Give time to read the message
 			if has_node("/root/HealthManager"):
 				HealthManager.lose_heart()
-			# Reset attempts and rounds for next entry
+			# Reset attempts and unlock question for new randomization, but keep round progress
 			attempts_made = 0
 			persistent_attempts_made = 0
-			rounds_completed = 0
-			persistent_rounds_completed = 0
-			# Close the mini-game so they can re-enter when ready
+			persistent_question_locked = false  # Unlock so next time gets a new question
+			# Close the mini-game so they can re-enter when ready (consistent with other mini-games)
 			complete_game(false)
 	else:
 		feedback_label.text = "✗ Incorrect. Try again!"
@@ -545,7 +586,7 @@ func _on_wrong_answer():
 
 func _update_attempts_display():
 	var remaining = max_total_attempts - attempts_made
-	attempts_label.text = "Attempts remaining: " + str(remaining)
+	attempts_label.text = "Attempts remaining: " + str(remaining) + "\n(All 3 attempts = 1 heart)"
 	attempts_label.show()
 
 func _get_button_at_pos(pos: Vector2i) -> Button:
@@ -559,9 +600,9 @@ func _input(event):
 	if not is_active:
 		return
 	
-	# Block ESC if game over screen is shown
+	# Block ESC if game over screen is shown or during completion sequence
 	if event.is_action_pressed("ui_cancel"):
-		if game_over_shown:
+		if game_over_shown or completing_game:
 			get_viewport().set_input_as_handled()
 			return
 		else:
