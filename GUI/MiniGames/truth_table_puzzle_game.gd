@@ -38,10 +38,16 @@ const QUESTION_POOL: Array[Dictionary] = [
 
 # Persistent state
 static var persistent_attempts_made: int = 0
+static var persistent_question_index: int = -1  # Locked question index
+static var persistent_question_locked: bool = false  # Whether question is locked
+static var persistent_prefilled_cells: Array[Vector2i] = []  # Locked prefilled cells positions
 
 ## Static method to reset persistent state (call when restarting game)
 static func reset_persistent_state():
 	persistent_attempts_made = 0
+	persistent_question_index = -1
+	persistent_question_locked = false
+	persistent_prefilled_cells.clear()
 
 # -------------------------------
 # STATE
@@ -56,6 +62,7 @@ var prefilled_cells: Array[Vector2i] = []  # Track which cells are pre-filled
 
 var attempts_made: int = 0
 var game_over_shown: bool = false
+var completing_game: bool = false  # Flag to block ESC during completion sequences
 
 # -------------------------------
 # UI NODES
@@ -104,8 +111,18 @@ func start_game() -> void:
 	main_panel.show()
 	color_rect.show()
 	
-	# Select random question
-	var question = QUESTION_POOL[randi() % QUESTION_POOL.size()]
+	# Select or restore question
+	var question: Dictionary
+	if persistent_question_locked and persistent_question_index >= 0:
+		# Restore locked question
+		question = QUESTION_POOL[persistent_question_index]
+		print("DEBUG: Restored locked question index ", persistent_question_index)
+	else:
+		# Select random question and lock it
+		persistent_question_index = randi() % QUESTION_POOL.size()
+		question = QUESTION_POOL[persistent_question_index]
+		persistent_question_locked = true
+		print("DEBUG: Locked new question index ", persistent_question_index)
 	current_columns = question.columns.duplicate()
 	current_question = question
 	
@@ -188,20 +205,30 @@ func _build_grid() -> void:
 	cell_nodes.clear()
 	prefilled_cells.clear()
 	
-	# Select random cells to pre-fill as hints
-	var _total_cells = rows.size() * current_columns.size()
-	var prefill_positions: Array[Vector2i] = []
-	
-	# Generate all possible positions (excluding A and B columns which are always given)
-	for r_idx in range(rows.size()):
-		for c_idx in range(2, current_columns.size()):  # Start from column 2 (skip A and B)
-			prefill_positions.append(Vector2i(c_idx, r_idx))
-	
-	# Shuffle and select random positions to pre-fill
-	prefill_positions.shuffle()
-	var num_to_prefill = min(prefilled_cells_count, prefill_positions.size())
-	for i in range(num_to_prefill):
-		prefilled_cells.append(prefill_positions[i])
+	# Use persistent prefilled cells if question is locked, otherwise generate new ones
+	if persistent_question_locked and persistent_prefilled_cells.size() > 0:
+		# Restore locked prefilled cells
+		prefilled_cells = persistent_prefilled_cells.duplicate()
+		print("DEBUG: Restored locked prefilled cells: ", prefilled_cells)
+	else:
+		# Select random cells to pre-fill as hints
+		var _total_cells = rows.size() * current_columns.size()
+		var prefill_positions: Array[Vector2i] = []
+		
+		# Generate all possible positions (excluding A and B columns which are always given)
+		for r_idx in range(rows.size()):
+			for c_idx in range(2, current_columns.size()):  # Start from column 2 (skip A and B)
+				prefill_positions.append(Vector2i(c_idx, r_idx))
+		
+		# Shuffle and select random positions to pre-fill
+		prefill_positions.shuffle()
+		var num_to_prefill = min(prefilled_cells_count, prefill_positions.size())
+		for i in range(num_to_prefill):
+			prefilled_cells.append(prefill_positions[i])
+		
+		# Lock these prefilled cells for subsequent attempts
+		persistent_prefilled_cells = prefilled_cells.duplicate()
+		print("DEBUG: Locked new prefilled cells: ", prefilled_cells)
 	
 	# Header row
 	for title in current_columns:
@@ -324,6 +351,9 @@ func _on_submit_pressed() -> void:
 	# SUCCESS
 	# ------------------------------
 	if mistakes == 0:
+		# Block ESC during completion sequence
+		completing_game = true
+		
 		feedback_label.text = "✓ Correct! Truth table completed."
 		feedback_label.add_theme_color_override("font_color", Color.GREEN)
 		
@@ -340,6 +370,9 @@ func _on_submit_pressed() -> void:
 	persistent_attempts_made += 1
 	
 	if persistent_attempts_made >= max_attempts:
+		# Block ESC during completion sequence
+		completing_game = true
+		
 		# Out of attempts → lose heart
 		submit_button.disabled = true
 		clear_button.disabled = true
@@ -366,8 +399,10 @@ func _on_submit_pressed() -> void:
 			await get_tree().create_timer(1.0).timeout
 			if has_node("/root/HealthManager"):
 				HealthManager.lose_heart()
-			# Reset attempts for next entry
+			# Reset attempts for next entry and unlock question for new randomization
 			persistent_attempts_made = 0
+			persistent_question_locked = false  # Unlock so next time gets a new question
+			persistent_prefilled_cells.clear()  # Clear prefilled cells so new question gets new hints
 			complete_game(false)
 	else:
 		# Still have attempts left
@@ -378,16 +413,16 @@ func _on_submit_pressed() -> void:
 
 func _update_attempts_display() -> void:
 	var remaining := max_attempts - persistent_attempts_made
-	attempts_label.text = "Attempts remaining: " + str(remaining)
+	attempts_label.text = "Attempts remaining: " + str(remaining) + "\n(All 3 attempts = 1 heart)"
 
 
 func _input(event):
 	if not is_active:
 		return
 	
-	# Block ESC if game over screen is shown
+	# Block ESC if game over screen is shown or during completion sequence
 	if event.is_action_pressed("ui_cancel"):
-		if game_over_shown:
+		if game_over_shown or completing_game:
 			get_viewport().set_input_as_handled()
 			return
 		else:
