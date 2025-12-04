@@ -1,14 +1,18 @@
 extends "res://Levels/Interactions/Scripts/interactable_object.gd"
 
 ## Final Door that tracks mini-game progress and shows a win screen when all are complete
+## Extends InteractableObject to leverage the interaction system
+## Displays progress for all three mini-games: Cipher, Truth Tables, and Set Theory
 
-# Mini-game scene references
+# Mini-game scene references - preloaded for quick access
 const CIPHER_GAME = preload("res://GUI/MiniGames/affine_cipher_game.tscn")
 const TRUTH_TABLE_GAME = preload("res://GUI/MiniGames/truth_table_puzzle.tscn")
 const SET_THEORY_GAME = preload("res://GUI/MiniGames/set_theory_puzzle_game.tscn")
 
-var win_screen_scene = preload("res://GUI/win_screen.tscn")
+var win_screen_scene = preload("res://GUI/win_screen.tscn")  # Win screen to show on completion
 
+## Generate a formatted text string showing the progress of all mini-games
+## Returns: BBCode formatted string with color-coded completion status
 func _get_progress_text() -> String:
 	var cipher_complete = MiniGameManager.is_mini_game_completed(CIPHER_GAME)
 	var truth_complete = MiniGameManager.is_mini_game_completed(TRUTH_TABLE_GAME)
@@ -46,6 +50,8 @@ func _get_progress_text() -> String:
 	
 	return text
 
+## Override the interaction handler from InteractableObject
+## Checks if all mini-games are complete, then shows win screen or progress
 func _on_interact():
 	var cipher_complete = MiniGameManager.is_mini_game_completed(CIPHER_GAME)
 	var truth_complete = MiniGameManager.is_mini_game_completed(TRUTH_TABLE_GAME)
@@ -60,6 +66,7 @@ func _on_interact():
 		DialogBox.show_dialog(progress_text)
 		await DialogBox.dialog_finished
 
+## Instantiate and display the win screen
 func _show_win_screen():
 	var win_screen = win_screen_scene.instantiate()
 	get_tree().root.add_child(win_screen)
