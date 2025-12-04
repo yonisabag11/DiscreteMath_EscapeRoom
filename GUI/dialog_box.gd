@@ -1,15 +1,17 @@
 extends Control
 
-# Dialog box that displays text for interactions in the escape room
+## Dialog box that displays text for interactions in the escape room
+## This is a basic implementation - the main dialog system uses dialog_box_autoload.gd instead
 
+# References to UI elements
 @onready var panel = $Panel
-@onready var text_label = $Panel/MarginContainer/VBoxContainer/RichTextLabel
-@onready var continue_label = $Panel/MarginContainer/VBoxContainer/Label
+@onready var text_label = $Panel/MarginContainer/VBoxContainer/RichTextLabel  # Displays the dialog text
+@onready var continue_label = $Panel/MarginContainer/VBoxContainer/Label  # Shows "[Space] to continue" prompt
 
-var current_text: String = ""
-var is_displaying: bool = false
+var current_text: String = ""  # Currently displayed text
+var is_displaying: bool = false  # Whether the dialog is currently visible
 
-signal dialog_finished
+signal dialog_finished  # Emitted when the player closes the dialog
 
 # Initialize the dialog box as hidden
 func _ready():

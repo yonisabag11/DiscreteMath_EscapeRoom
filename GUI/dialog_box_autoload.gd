@@ -1,26 +1,29 @@
 extends Node
 
-# Autoload singleton for managing dialog boxes in the escape room
-# This is a pure script autoload that creates UI on demand
+## Autoload singleton for managing dialog boxes in the escape room
+## This is a pure script autoload that creates UI on demand
+## Add this to Project Settings -> Autoload as "DialogBox"
 
-var dialog_scene: PackedScene = preload("res://GUI/dialog_box.tscn")
-var dialog_instance: CanvasLayer = null
+var dialog_scene: PackedScene = preload("res://GUI/dialog_box.tscn")  # Preloaded dialog scene (not currently used)
+var dialog_instance: CanvasLayer = null  # The CanvasLayer that holds the dialog UI
 
-var is_displaying: bool = false
-signal dialog_finished
+var is_displaying: bool = false  # Whether a dialog is currently being shown
+signal dialog_finished  # Emitted when the player closes the dialog
 
 func _ready():
 	# Create the dialog UI and add it to the tree
+	# This builds all UI elements programmatically instead of using a scene
 	dialog_instance = CanvasLayer.new()
 	add_child(dialog_instance)
 	
-	# Create the UI elements
+	# Create the main panel container - positioned at bottom of screen
 	var panel = Panel.new()
 	panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 	panel.custom_minimum_size = Vector2(0, 100)  # Start with minimum height
 	panel.offset_top = -100
 	dialog_instance.add_child(panel)
 	
+	# Create margin container for proper spacing
 	var margin = MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
 	margin.add_theme_constant_override("margin_left", 20)
@@ -29,9 +32,11 @@ func _ready():
 	margin.add_theme_constant_override("margin_bottom", 15)
 	panel.add_child(margin)
 	
+	# Vertical container to stack text and continue prompt
 	var vbox = VBoxContainer.new()
 	margin.add_child(vbox)
 	
+	# Rich text label for displaying dialog with formatting support
 	var text_label = RichTextLabel.new()
 	text_label.bbcode_enabled = true
 	text_label.fit_content = true
@@ -50,6 +55,7 @@ func _ready():
 	text_label.name = "TextLabel"  # Name it so we can find it later
 	vbox.add_child(text_label)
 	
+	# Continue prompt label - shows at bottom right
 	var continue_label = Label.new()
 	continue_label.text = "[Space] to continue..."
 	continue_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -57,13 +63,16 @@ func _ready():
 	continue_label.add_theme_font_size_override("font_size", 6)
 	vbox.add_child(continue_label)
 	
-	# Store references
+	# Store references for later access using metadata
 	set_meta("panel", panel)
 	set_meta("text_label", text_label)
 	
-	# Hide initially
+	# Hide initially - dialog only appears when show_dialog is called
 	panel.hide()
 
+## Show a dialog with the given text
+## text: The text content to display (supports BBCode formatting)
+## position: Optional custom position (use Vector2(-1, -1) for default bottom position)
 func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 	var panel = get_meta("panel")
 	var text_label = get_meta("text_label")
@@ -90,6 +99,7 @@ func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 	
 	# If custom position is provided (not -1, -1), use it
 	if position != Vector2(-1, -1):
+		# Custom positioning for specific dialog placements
 		panel.set_anchors_preset(Control.PRESET_TOP_LEFT)
 		panel.position = position
 		panel.offset_top = 0
@@ -98,7 +108,7 @@ func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 		panel.offset_right = 0
 		panel.size = Vector2(400, total_height)  # Dynamic size for custom positioned dialogs
 	else:
-		# Default bottom position
+		# Default bottom position - typical dialog placement
 		panel.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
 		panel.custom_minimum_size = Vector2(0, total_height)
 		panel.offset_top = -total_height
@@ -109,6 +119,7 @@ func show_dialog(text: String, position: Vector2 = Vector2(-1, -1)):
 	panel.show()
 	is_displaying = true
 
+## Hide the dialog and unfreeze the player
 func hide_dialog():
 	var panel = get_meta("panel")
 	panel.hide()
@@ -121,6 +132,7 @@ func hide_dialog():
 	
 	dialog_finished.emit()
 
+## Handle input to close dialog when player presses Space/Enter
 func _input(event):
 	if is_displaying and event.is_action_pressed("ui_accept"):
 		hide_dialog()
